@@ -1,0 +1,31 @@
+data_input:
+  source_type: "csv"  # csv/s3/api
+  batch_size: 500
+  stream_delay: 2
+  
+  csv:
+    path: "data/raw/train.csv"
+  
+  s3:
+    bucket: "nyc-taxi-data"
+    key: "2023/trips.csv"
+    aws_access_key: "AKIAXXXXXXXXXXXXXX"
+    aws_secret_key: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+    region: "us-east-1"
+  
+  api:
+    url: "https://api.nyc.gov/taxi-data"
+    params:
+      year: 2023
+      month: 11
+    headers:
+      Authorization: "Bearer XXXX-XXXX-XXXX-XXXX"
+    format: "csv"
+
+storage:
+  type: "sqlite"
+  database: "data/taxi.db"
+
+logging:
+  level: "INFO"
+  file: "logs/pipeline.log"
