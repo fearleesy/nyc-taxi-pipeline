@@ -1,6 +1,8 @@
 import sqlite3
 import logging
 
+import pandas as pd
+
 logger = logging.getLogger(__name__)
 
 class DatabaseManager:
@@ -39,3 +41,9 @@ class DatabaseManager:
             conn.executemany(sql, data)
             conn.commit()
         # logger.info(f"Успешно сохранено {len(batch)} записей")
+    def load_batch(self, iter, batch):
+        conn = sqlite3.connect('data/taxi.db')
+        query = f"SELECT * FROM raw_trips limit {batch},{iter*500}"
+        df = pd.read_sql(query, conn)
+        conn.close()
+        return df
