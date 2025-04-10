@@ -29,6 +29,10 @@ def main():
                 print(f"Ошибка инициализации: {e}")
 
         elif command.lower() == 'update':
+            try:
+                os.mkdir("models")
+            except:
+                pass
             if collector is None:
                 print("Сначала выполните Init.")
                 continue
