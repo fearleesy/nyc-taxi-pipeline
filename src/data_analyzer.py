@@ -30,7 +30,7 @@ class DataAnalyzer:
         self.added_columns = []
         self.removed_columns = []
         self.numeric_cols = []
-        self.categorical_cols = []
+        self.categorical_columns = []
     
     def calculate_completeness(self):
         completeness = {}
@@ -71,7 +71,6 @@ class DataAnalyzer:
         max_log_trip_duration = df['log_trip_duration'].quantile(0.995)
         min_log_trip_duration = df['log_trip_duration'].quantile(0.01)
         df = df[(df['log_trip_duration'] <= max_log_trip_duration) & (df['log_trip_duration'] >= min_log_trip_duration)]
-        print(df.columns)
         maxim = df['log_haversine'].quantile(0.995)
         minim = df['log_haversine'].quantile(0.015)
         df = df[(df['log_haversine'] <= maxim) & (df['log_haversine'] >= minim)]
