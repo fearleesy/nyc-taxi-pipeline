@@ -24,7 +24,8 @@ class DataAnalyzer:
         self.scaler = StandardScaler()
         self.added_columns = []
         self.removed_columns = []
-        self.categorical_columns = []
+        self.numeric_cols = []
+        self.categorical_cols = []
     
     def calculate_completeness(self):
         completeness = {}
@@ -62,20 +63,23 @@ class DataAnalyzer:
     def clean_data(self):
         df = self.df[self.df.notna().all(axis=1)].copy()
 
-        max_log_trip_duration = df['trip_duration'].quantile(0.995)
-        min_log_trip_duration = df['trip_duration'].quantile(0.01)
-        df = df[(df['trip_duration'] <= max_log_trip_duration) & (df['trip_duration'] >= min_log_trip_duration)]
+        max_log_trip_duration = df['log_trip_duration'].quantile(0.995)
+        min_log_trip_duration = df['log_trip_duration'].quantile(0.01)
+        df = df[(df['log_trip_duration'] <= max_log_trip_duration) & (df['log_trip_duration'] >= min_log_trip_duration)]
 
-        maxim = df['haversine'].quantile(0.995)
-        minim = df['haversine'].quantile(0.015)
-        df = df[(df['haversine'] <= maxim) & (df['haversine'] >= minim)]
+        maxim = df['log_haversine'].quantile(0.995)
+        minim = df['log_haversine'].quantile(0.015)
+        df = df[(df['log_haversine'] <= maxim) & (df['log_haversine'] >= minim)]
 
         if not self.metrics:
             self.calculate_all_metrics()
         
-        for col, metrics in self.metrics['uniqueness'].items():
+        '''for col, metrics in self.metrics['uniqueness'].items():
             if metrics['value'] < self.cleaning_thresholds['uniqueness']:
-                self.categorical_columns.append(col)
+                self.categorical_cols.append(col)
+            else:
+                self.numeric_cols.append(col)'''
+
         
         self.cleaned_df = df
         self.cleaning_report = {
@@ -135,25 +139,26 @@ class DataAnalyzer:
     
     def _calculate_basic_stats(self):
         stats = {}
-        
+
         for col in self.numeric_cols:
             stats[col] = {
-                'mean': self.data[col].mean(),
-                'std': self.data[col].std(),
-                'skewness': self.data[col].skew(),
-                'kurtosis': self.data[col].kurtosis(),
-                'percentiles': self.data[col].quantile([0.05, 0.25, 0.5, 0.75, 0.95]).to_dict()
+                'mean': self.df[col].mean(),
+                'std': self.df[col].std(),
+                'skewness': self.df[col].skew(),
+                'kurtosis': self.df[col].kurtosis(),
+                'percentiles': self.df[col].quantile([0.05, 0.25, 0.5, 0.75, 0.95]).to_dict()
             }
 
         for col in self.categorical_cols:
             stats[col] = {
-                'n_unique': self.data[col].nunique(),
-                'top_value': self.data[col].mode()[0],
-                'top_freq': (self.data[col] == self.data[col].mode()[0]).mean(),
-                'value_counts': self.data[col].value_counts(normalize=True).head(10).to_dict()
+                'n_unique': self.df[col].nunique(),
+                'top_value': self.df[col].mode()[0],
+                'top_freq': (self.df[col] == self.df[col].mode()[0]).mean(),
+                'value_counts': self.df[col].value_counts(normalize=True).head(10).to_dict()
             }
         
         self.historical_stats = stats
+        return stats
 
     def feature_engineering(self):
         df = self.df
@@ -227,6 +232,9 @@ class DataAnalyzer:
         transformer = MapGridTransformer(n_rows=7, n_cols=7)
         transformer.fit(df)
         df = transformer.transform(df)
+        
+        self.categorical_cols = ['day_of_week', 'month', 'hour', 'is_jamm', 'is_airport', 'vendor_id', 'store_and_fwd_flag', 'passenger_count']
+        self.numeric_cols = ['log_haversine', 'pickup_cell', 'dropoff_cell']
 
         self.df = df
 
@@ -311,3 +319,4 @@ if __name__ == "__main__":
     
     preproccess = DataAnalyzer(df)
     preproccess.fit_transform()
+    print(preproccess._calculate_basic_stats())
