@@ -9,7 +9,7 @@ import os
 collector = None
 analyzer = DataAnalyzer()
 engineer = FeatureEngineer()
-model = TaxiModel()
+model = None
 latest_model_path = "models/latest_model.pkl"
 
 def main():
@@ -40,6 +40,7 @@ def main():
                 model_type = str(input("Модель (linreg, knn, dt, rf): "))
                 is_warm_start = int(input("Дообучаем модель, если возможно? (0 или 1): "))
 
+                model = TaxiModel(model_type)
                 new_data = collector.get_batch(batch_size)
                 clean_data = analyzer.clean_data(new_data)
                 clean_data = engineer.add_time_features(clean_data)
