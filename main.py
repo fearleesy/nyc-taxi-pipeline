@@ -82,7 +82,8 @@ def main():
                 print("Сначала выполните Init.")
                 continue
             try:
-                stats = analyzer.calculate_statistics(collector.batch_data)
+                analyzer = DataAnalyzer(collector.batch_data)
+                stats = analyzer._calculate_basic_stats()
                 print("Статистика по текущей выборке:")
                 for k, v in stats.items():
                     print(f"{k}: {v}")
