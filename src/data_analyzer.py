@@ -248,7 +248,7 @@ class DataAnalyzer:
             file.write(f"\nУдаленные столбцы: {self.removed_columns}")
             file.write(f"\nДобавленные столбцы: {self.added_columns}")
 
-        return self.df
+        return cleaned_df
         
 
 class MapGridTransformer(BaseEstimator, TransformerMixin):
