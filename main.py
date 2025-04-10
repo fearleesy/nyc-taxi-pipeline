@@ -13,6 +13,7 @@ model = TaxiModel()
 latest_model_path = "models/latest_model.pkl"
 
 def main():
+    global collector, model
     while True:
         command = input("\nВведите команду (Init / Update / Inference / Summary / Exit): ").strip()
 
@@ -29,15 +30,16 @@ def main():
                 print(f"Ошибка инициализации: {e}")
 
         elif command.lower() == 'update':
-            try:
+            if not os.path.exists("models"):
                 os.mkdir("models")
-            except:
-                pass
             if collector is None:
                 print("Сначала выполните Init.")
                 continue
             try:
                 batch_size = int(input("Размер батча: "))
+                model_type = str(input("Модель (linreg, knn, dt, rf): "))
+                is_warm_start = int(input("Дообучаем модель, если возможно? (0 или 1): "))
+
                 new_data = collector.get_batch(batch_size)
                 clean_data = analyzer.clean_data(new_data)
                 clean_data = engineer.add_time_features(clean_data)
@@ -48,7 +50,7 @@ def main():
                 ]]
                 target = clean_data['trip_duration']
 
-                model.train(features, target)
+                model.train(model_type, features, target, is_warm_start)
                 model.save(latest_model_path)
                 print(f"Модель обучена на {len(clean_data)} строках и сохранена как {latest_model_path}.")
             except Exception as e:
@@ -58,6 +60,7 @@ def main():
             try:
                 path = input("Путь к CSV с входными данными: ")
                 model_name = input("Имя модели (например, latest): ").strip()
+                metric = str(input("Метрика (RMSE, MAE): "))
 
                 if not os.path.exists(path):
                     print("Файл не найден.")
@@ -74,11 +77,9 @@ def main():
                     'dropoff_longitude', 'dropoff_latitude', 'vendor_id'
                 ]]
                 true_values = clean_df['trip_duration']
-                predictions = infer_model.predict(features)
+                result = infer_model.predict(features, true_values, metric)
 
-                # Метрики
-                mae = (abs(predictions - true_values)).mean()
-                print(f"MAE: {mae:.2f} секунд на {len(predictions)} примерах")
+                print(f"MAE: {result:.2f} секунд на {len(true_values)} примерах")
             except Exception as e:
                 print(f"Ошибка инференса: {e}")
 
