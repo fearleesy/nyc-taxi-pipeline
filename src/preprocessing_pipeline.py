@@ -1,4 +1,3 @@
-from geopy.distance import great_circle
 import numpy as np
 import pandas as pd
 
