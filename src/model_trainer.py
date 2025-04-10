@@ -93,15 +93,13 @@ class TaxiModel:
                 'model__p': [1, 2]
             },
             'DT': {
-                'model__max_depth': [None, 3, 5, 7, 10],
+                'model__max_depth': [5, 7, 10],
                 'model__min_samples_split': [2, 5, 10],
                 'model__min_samples_leaf': [1, 2, 4]
             },
             'RF': {
-                'model__n_estimators': [old_n_estimators, old_n_estimators + 50, old_n_estimators + 100] if is_warm_start else [50, 100, 200], 
-                'model__max_depth': [None, 5, 10],
-                'model__min_samples_split': [2, 5],
-                'model__bootstrap': [True, False] 
+                'model__n_estimators': [old_n_estimators, old_n_estimators + 10, old_n_estimators + 20] if is_warm_start else [10, 20, 40], 
+                'model__max_depth': [None, 2, 4]
             }
         }
         if model_name == "LR":
