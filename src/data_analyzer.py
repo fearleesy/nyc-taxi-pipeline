@@ -60,13 +60,13 @@ class DataAnalyzer:
         self.calculate_uniqueness()
         return self.metrics
     
-    def clean_data(self):
+     def clean_data(self):
         df = self.df[self.df.notna().all(axis=1)].copy()
 
         max_log_trip_duration = df['log_trip_duration'].quantile(0.995)
         min_log_trip_duration = df['log_trip_duration'].quantile(0.01)
         df = df[(df['log_trip_duration'] <= max_log_trip_duration) & (df['log_trip_duration'] >= min_log_trip_duration)]
-
+        print(df.columns)
         maxim = df['log_haversine'].quantile(0.995)
         minim = df['log_haversine'].quantile(0.015)
         df = df[(df['log_haversine'] <= maxim) & (df['log_haversine'] >= minim)]
@@ -74,12 +74,9 @@ class DataAnalyzer:
         if not self.metrics:
             self.calculate_all_metrics()
         
-        '''for col, metrics in self.metrics['uniqueness'].items():
+        for col, metrics in self.metrics['uniqueness'].items():
             if metrics['value'] < self.cleaning_thresholds['uniqueness']:
-                self.categorical_cols.append(col)
-            else:
-                self.numeric_cols.append(col)'''
-
+                self.categorical_columns.append(col)
         
         self.cleaned_df = df
         self.cleaning_report = {
@@ -88,6 +85,7 @@ class DataAnalyzer:
         }
         
         return df
+    
     
     def save_quality_report(self, file_path: str):
         

@@ -36,20 +36,23 @@ def main():
                 continue
             try:
                 batch_size = int(input("Размер батча: "))
-                model_type = str(input("Модель (linreg, knn, dt, rf): "))
-                is_warm_start = int(input("Дообучаем модель, если возможно? (0 или 1): "))
+                model_type = str(input("Модель (LR, KNN, DT, RF, Lasso, Ridge): "))
+                is_warm_start = bool(int(input("Дообучаем модель, если возможно? (0 или 1): ")))
 
                 model = TaxiModel(model_type)
+                if model.pipeline == 0:
+                    continue
                 new_data = collector.get_batch(batch_size)
                 analyzer = DataAnalyzer(new_data)
-                clean_data = analyzer.fit_transform()
+                clean_df = analyzer.fit_transform()
 
                 target = clean_df['log_trip_duration']
                 features = clean_df.drop(columns=["log_trip_duration"])
+                print(features)
 
                 model.train(model_type, features, target, is_warm_start)
                 model.save(latest_model_path)
-                print(f"Модель обучена на {len(clean_data)} строках и сохранена как {latest_model_path}.")
+                print(f"Модель обучена на {len(clean_df)} строках и сохранена как {latest_model_path}.")
             except Exception as e:
                 print(f"Ошибка во время обновления: {e}")
 
