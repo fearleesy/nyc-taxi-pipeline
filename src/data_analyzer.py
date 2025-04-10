@@ -29,7 +29,8 @@ class DataAnalyzer:
         self.scaler = StandardScaler()
         self.added_columns = []
         self.removed_columns = []
-        self.categorical_columns = []
+        self.numeric_cols = []
+        self.categorical_cols = []
     
     def calculate_completeness(self):
         completeness = {}
@@ -140,25 +141,26 @@ class DataAnalyzer:
     
     def _calculate_basic_stats(self):
         stats = {}
-        
+
         for col in self.numeric_cols:
             stats[col] = {
-                'mean': self.data[col].mean(),
-                'std': self.data[col].std(),
-                'skewness': self.data[col].skew(),
-                'kurtosis': self.data[col].kurtosis(),
-                'percentiles': self.data[col].quantile([0.05, 0.25, 0.5, 0.75, 0.95]).to_dict()
+                'mean': self.df[col].mean(),
+                'std': self.df[col].std(),
+                'skewness': self.df[col].skew(),
+                'kurtosis': self.df[col].kurtosis(),
+                'percentiles': self.df[col].quantile([0.05, 0.25, 0.5, 0.75, 0.95]).to_dict()
             }
 
         for col in self.categorical_cols:
             stats[col] = {
-                'n_unique': self.data[col].nunique(),
-                'top_value': self.data[col].mode()[0],
-                'top_freq': (self.data[col] == self.data[col].mode()[0]).mean(),
-                'value_counts': self.data[col].value_counts(normalize=True).head(10).to_dict()
+                'n_unique': self.df[col].nunique(),
+                'top_value': self.df[col].mode()[0],
+                'top_freq': (self.df[col] == self.df[col].mode()[0]).mean(),
+                'value_counts': self.df[col].value_counts(normalize=True).head(10).to_dict()
             }
         
         self.historical_stats = stats
+        return stats
 
     def feature_engineering(self):
         df = self.df
@@ -233,6 +235,9 @@ class DataAnalyzer:
         transformer.fit(df)
         df = transformer.transform(df)
 
+        self.categorical_cols = ['day_of_week', 'month', 'hour', 'is_jamm', 'is_airport', 'vendor_id', 'store_and_fwd_flag', 'passenger_count']
+        self.numeric_cols = ['log_haversine', 'pickup_cell', 'dropoff_cell']
+
         self.df = df
 
     def fit_transform(self):
@@ -306,13 +311,3 @@ class MapGridTransformer(BaseEstimator, TransformerMixin):
         pickup_cells = self._get_cell(X['pickup_latitude'].values, X['pickup_longitude'].values)
         dropoff_cells = self._get_cell(X['dropoff_latitude'].values, X['dropoff_longitude'].values)
         return X.assign(pickup_cell=pickup_cells, dropoff_cell=dropoff_cells)
-
-
-if __name__ == "__main__":
-    conn = sqlite3.connect('taxi.db')
-    query = f"SELECT * FROM raw_trips"
-    df = pd.read_sql(query, conn)
-    conn.close()
-    
-    preproccess = DataAnalyzer(df)
-    preproccess.fit_transform()
