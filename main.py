@@ -42,8 +42,7 @@ def main():
 
                 model = TaxiModel(model_type)
                 new_data = collector.get_batch(batch_size)
-                clean_data = analyzer.clean_data(new_data)
-                clean_data = engineer.add_time_features(clean_data)
+                clean_data = analyzer.fit_transform(new_data)
 
                 features = clean_data[[
                     'passenger_count', 'pickup_longitude', 'pickup_latitude',
