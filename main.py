@@ -44,11 +44,8 @@ def main():
                 analyzer = DataAnalyzer(new_data)
                 clean_data = analyzer.fit_transform()
 
-                features = clean_data[[
-                    'passenger_count', 'pickup_longitude', 'pickup_latitude',
-                    'dropoff_longitude', 'dropoff_latitude', 'vendor_id'
-                ]]
-                target = clean_data['trip_duration']
+                target = clean_df['log_trip_duration']
+                features = clean_df.drop(columns=["log_trip_duration"])
 
                 model.train(model_type, features, target, is_warm_start)
                 model.save(latest_model_path)
@@ -72,11 +69,8 @@ def main():
                 analyzer = DataAnalyzer(df)
                 clean_df = analyzer.fit_transform()
 
-                features = clean_df[[
-                    'passenger_count', 'pickup_longitude', 'pickup_latitude',
-                    'dropoff_longitude', 'dropoff_latitude', 'vendor_id'
-                ]]
-                true_values = clean_df['trip_duration']
+                true_values = clean_df['log_trip_duration']
+                features = clean_df.drop(columns=["log_trip_duration"])
                 result = infer_model.predict(features, true_values, metric)
 
                 print(f"MAE: {result:.2f} секунд на {len(true_values)} примерах")
