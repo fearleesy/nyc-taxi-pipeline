@@ -69,8 +69,8 @@ def main():
                 infer_model = TaxiModel.load(f"models/{model_name}_model.pkl")
                 df = pd.read_csv(path)
 
-                clean_df = analyzer.clean_data(df)
-                clean_df = engineer.add_time_features(clean_df)
+                analyzer = DataAnalyzer(df)
+                clean_df = analyzer.fit_transform()
 
                 features = clean_df[[
                     'passenger_count', 'pickup_longitude', 'pickup_latitude',
