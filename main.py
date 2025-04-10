@@ -48,6 +48,7 @@ def main():
 
                 target = clean_df['log_trip_duration']
                 features = clean_df.drop(columns=["log_trip_duration"])
+                print(features)
 
                 model.train(model_type, features, target, is_warm_start)
                 model.save(latest_model_path)
