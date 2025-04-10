@@ -65,7 +65,7 @@ class DataAnalyzer:
         self.calculate_uniqueness()
         return self.metrics
     
-     def clean_data(self):
+    def clean_data(self):
         df = self.df[self.df.notna().all(axis=1)].copy()
 
         max_log_trip_duration = df['log_trip_duration'].quantile(0.995)
@@ -239,6 +239,9 @@ class DataAnalyzer:
         self.categorical_cols = ['day_of_week', 'month', 'hour', 'is_jamm', 'is_airport', 'vendor_id', 'store_and_fwd_flag', 'passenger_count']
         self.numeric_cols = ['log_haversine', 'pickup_cell', 'dropoff_cell']
 
+        self.categorical_cols = ['day_of_week', 'month', 'hour', 'is_jamm', 'is_airport', 'vendor_id', 'store_and_fwd_flag', 'passenger_count']
+        self.numeric_cols = ['log_haversine', 'pickup_cell', 'dropoff_cell']
+
         self.df = df
 
     def fit_transform(self):
@@ -312,14 +315,3 @@ class MapGridTransformer(BaseEstimator, TransformerMixin):
         pickup_cells = self._get_cell(X['pickup_latitude'].values, X['pickup_longitude'].values)
         dropoff_cells = self._get_cell(X['dropoff_latitude'].values, X['dropoff_longitude'].values)
         return X.assign(pickup_cell=pickup_cells, dropoff_cell=dropoff_cells)
-
-
-if __name__ == "__main__":
-    conn = sqlite3.connect('taxi.db')
-    query = f"SELECT * FROM raw_trips"
-    df = pd.read_sql(query, conn)
-    conn.close()
-    
-    preproccess = DataAnalyzer(df)
-    preproccess.fit_transform()
-    print(preproccess._calculate_basic_stats())
