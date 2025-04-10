@@ -4,3 +4,5 @@ boto3==1.37.28
 requests==2.25.1
 PyYAML==6.0.2
 scikit-learn==1.6.1
+folium==0.19.5
+haversine==2.9.0
