@@ -7,7 +7,6 @@ import pandas as pd
 import os
 
 collector = None
-analyzer = DataAnalyzer()
 engineer = FeatureEngineer()
 model = None
 latest_model_path = "models/latest_model.pkl"
@@ -42,7 +41,8 @@ def main():
 
                 model = TaxiModel(model_type)
                 new_data = collector.get_batch(batch_size)
-                clean_data = analyzer.fit_transform(new_data)
+                analyzer = DataAnalyzer(new_data)
+                clean_data = analyzer.fit_transform()
 
                 features = clean_data[[
                     'passenger_count', 'pickup_longitude', 'pickup_latitude',
