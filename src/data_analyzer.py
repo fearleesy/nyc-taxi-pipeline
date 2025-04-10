@@ -62,13 +62,13 @@ class DataAnalyzer:
     def clean_data(self):
         df = self.df[self.df.notna().all(axis=1)].copy()
 
-        max_log_trip_duration = df['trip_duration'].quantile(0.995)
-        min_log_trip_duration = df['trip_duration'].quantile(0.01)
-        df = df[(df['trip_duration'] <= max_log_trip_duration) & (df['trip_duration'] >= min_log_trip_duration)]
-
-        maxim = df['haversine'].quantile(0.995)
-        minim = df['haversine'].quantile(0.015)
-        df = df[(df['haversine'] <= maxim) & (df['haversine'] >= minim)]
+        max_log_trip_duration = df['log_trip_duration'].quantile(0.995)
+        min_log_trip_duration = df['log_trip_duration'].quantile(0.01)
+        df = df[(df['log_trip_duration'] <= max_log_trip_duration) & (df['log_trip_duration'] >= min_log_trip_duration)]
+        print(df.columns)
+        maxim = df['log_haversine'].quantile(0.995)
+        minim = df['log_haversine'].quantile(0.015)
+        df = df[(df['log_haversine'] <= maxim) & (df['log_haversine'] >= minim)]
 
         if not self.metrics:
             self.calculate_all_metrics()
