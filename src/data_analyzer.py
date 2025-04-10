@@ -62,13 +62,13 @@ class DataAnalyzer:
     def clean_data(self):
         df = self.df[self.df.notna().all(axis=1)].copy()
 
-        max_log_trip_duration = df['log_trip_duration'].quantile(0.995)
-        min_log_trip_duration = df['log_trip_duration'].quantile(0.01)
-        df = df[(df['log_trip_duration'] <= max_log_trip_duration) & (df['log_trip_duration'] >= min_log_trip_duration)]
+        max_log_trip_duration = df['trip_duration'].quantile(0.995)
+        min_log_trip_duration = df['trip_duration'].quantile(0.01)
+        df = df[(df['trip_duration'] <= max_log_trip_duration) & (df['trip_duration'] >= min_log_trip_duration)]
 
-        maxim = df['log_haversine'].quantile(0.995)
-        minim = df['log_haversine'].quantile(0.015)
-        df = df[(df['log_haversine'] <= maxim) & (df['log_haversine'] >= minim)]
+        maxim = df['haversine'].quantile(0.995)
+        minim = df['haversine'].quantile(0.015)
+        df = df[(df['haversine'] <= maxim) & (df['haversine'] >= minim)]
 
         if not self.metrics:
             self.calculate_all_metrics()
@@ -247,6 +247,8 @@ class DataAnalyzer:
             file.write(f"\nОчищенный размер: {self.cleaning_report['cleaned_shape']}")
             file.write(f"\nУдаленные столбцы: {self.removed_columns}")
             file.write(f"\nДобавленные столбцы: {self.added_columns}")
+
+        return self.df
         
 
 class MapGridTransformer(BaseEstimator, TransformerMixin):
