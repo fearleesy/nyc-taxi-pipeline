@@ -7,7 +7,12 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.base import BaseEstimator, TransformerMixin
 from haversine import haversine, Unit
 import folium
+import os
 
+if not os.path.exists("stats"):
+    os.mkdir("stats")
+data_quiality_path = "stats/DataAnalisis.txt"
+data_quality_report_path = "stats/data_quality_report.json"
 
 class DataAnalyzer:
     def __init__(self, df: pd.DataFrame,
@@ -234,13 +239,13 @@ class DataAnalyzer:
         self.calculate_all_metrics()
         
 
-        with open("DataAnalisis.txt", "w", encoding="utf-8") as file:
+        with open(data_quiality_path, "w", encoding="utf-8") as file:
             file.write("Качество данных до очистки:")
             file.write(f"\n{self.get_quality_summary()}")
             self.feature_engineering()
         
             cleaned_df = self.clean_data()
-            self.save_quality_report("data_quality_report.json")
+            self.save_quality_report(data_quality_report_path)
         
             file.write("\n\nОтчет об очистке:")
             file.write(f"\nИсходный размер: {self.cleaning_report['original_shape']}")
