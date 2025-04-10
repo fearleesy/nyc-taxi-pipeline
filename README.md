@@ -74,8 +74,8 @@ nyc-taxi-pipeline/
 │   ├── data_quality_report.json
 │   └── DataAnalisis.txt
 ├── models/
-│   ├── 
-│   └── 
+│   ├──LR_model
+│   └──KNN_model 
 ├── src/
 │   ├── data_collector.py
 │   ├── data_analyzer.py
