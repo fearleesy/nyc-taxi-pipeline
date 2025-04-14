@@ -73,7 +73,8 @@ class TaxiModel:
             print("Дообучение модели...")
         else:
             if is_warm_start:
-                print("Дообучение невозможно", is_warm_start)
+                # print("Дообучение невозможно", is_warm_start)
+                raise Exception("Дообучение невозможно")
 
         
         print("\nПодбор гиперпараметров...")
