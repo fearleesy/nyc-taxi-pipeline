@@ -42,8 +42,9 @@ class TaxiModel:
                 ('preprocessor', preprocessor),
                 ('model', models[model_name])
             ])
-        print("Неправильное имя модели")
-        return None
+        # print("Неправильное имя модели")
+        raise Exception("Неправильное имя модели")
+        # return None
     
     # def train(self, X: pd.DataFrame, y: pd.Series, is_warm_start: bool):
 
