@@ -48,10 +48,10 @@ def main():
 
                 target = clean_df['log_trip_duration']
                 features = clean_df.drop(columns=["log_trip_duration"])
-                print(features)
 
                 model.train(model_type, features, target, is_warm_start)
                 model.save(latest_model_path)
+                model.save(f"models/{model_type}_model.pkl")
                 print(f"Модель обучена на {len(clean_df)} строках и сохранена как {latest_model_path}.")
             except Exception as e:
                 print(f"Ошибка во время обновления: {e}")
