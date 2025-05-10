@@ -89,7 +89,10 @@ def main():
                 stats = analyzer._calculate_basic_stats()
                 print("Статистика по текущей выборке:")
                 for k, v in stats.items():
-                    print(f"{k}: {v}")
+                    print(f"{k} :")
+                    for w, ans in v.items():
+                        print(f"\t{w} : {ans}")
+                    print()
             except Exception as e:
                 print(f"Ошибка при расчёте статистики: {e}")
 

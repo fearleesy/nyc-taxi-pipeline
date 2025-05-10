@@ -30,7 +30,14 @@ class DataAnalyzer:
         self.added_columns = []
         self.removed_columns = []
         self.numeric_cols = []
-        self.categorical_columns = []
+        self.categorical_cols = []
+
+        self._detect_column_types()
+
+
+    def _detect_column_types(self):
+            self.numeric_cols = self.df.select_dtypes(include=['number']).columns.tolist()
+            self.categorical_cols = self.df.select_dtypes(include=['object', 'category']).columns.tolist()
     
     def calculate_completeness(self):
         completeness = {}
@@ -78,9 +85,11 @@ class DataAnalyzer:
         if not self.metrics:
             self.calculate_all_metrics()
         
-        for col, metrics in self.metrics['uniqueness'].items():
+        '''for col, metrics in self.metrics['uniqueness'].items():
             if metrics['value'] < self.cleaning_thresholds['uniqueness']:
-                self.categorical_columns.append(col)
+                self.categorical_cols.append(col)
+            else:
+                self.numeric_cols.append(col)'''
         
         self.cleaned_df = df
         self.cleaning_report = {
