@@ -90,3 +90,4 @@ nyc-taxi-pipeline/
 ---
 
 
+Файл с отчетом о выполнении заданий участниками: https://docs.google.com/document/d/1rY1xrFnhJ-CDMQtMk8U6sRA37zRRQWNKbhgemM5TEFg/edit?tab=t.0
