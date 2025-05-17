@@ -69,8 +69,13 @@ def train_model(model_type: str, warm_start: bool, db_path: str, start: int = 0,
     analyzer = DataAnalyzer(df)
     clean_df = analyzer.fit_transform()
 
-    y = clean_df["log_trip_duration"]
-    X = clean_df.drop(columns=["log_trip_duration"])
+    preprocesser = FeatureEngineer(clean_df)
+    preprocessed_df = preprocesser.fit_transform()
+
+    print(preprocessed_df)
+
+    y = preprocessed_df["log_trip_duration"]
+    X = preprocessed_df.drop(columns=["log_trip_duration"])
 
     model = TaxiModel(model_type)
     if model.pipeline == 0:
@@ -110,8 +115,11 @@ def test_model(model_name: str, csv_path: str, metric: str = "MAE") -> None:
     analyzer = DataAnalyzer(df)
     clean_df = analyzer.fit_transform()
 
-    y_true = clean_df["log_trip_duration"]
-    X = clean_df.drop(columns=["log_trip_duration"])
+    preprocesser = FeatureEngineer(clean_df)
+    preprocessed_df = preprocesser.fit_transform()
+
+    y_true = preprocessed_df["log_trip_duration"]
+    X = preprocessed_df.drop(columns=["log_trip_duration"])
 
     score = model.predict(X, y_true, metric)
     print(f"[test] {metric}: {score:.2f} seconds on {len(y_true)} samples.")
