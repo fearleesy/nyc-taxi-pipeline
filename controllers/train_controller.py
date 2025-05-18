@@ -1,5 +1,7 @@
 import os
 import sys
+import time
+import tracemalloc
 from typing import Optional
 
 from src.db_manager import DBManager
@@ -47,9 +49,8 @@ def train_model(
     if df.empty:
         logger.debug(f"No training data found in slice [{start}:{end}] from {db_path}.")
         sys.exit(f"[train] No training data found in slice [{start}:{end}] from {db_path}.")
-
+    
     analyzer = DataAnalyzer(df)
-    logger.debug("Initialized DataAnalyzer")
 
     if model_type is None:
         df_stats = quick_dataset_summary(df)
@@ -62,12 +63,18 @@ def train_model(
         logger.debug(f"Auto-selected model type: {model_type}")
     else:
         logger.debug(f"Using provided model type: {model_type}")
+    
+    tracemalloc.start()
 
+    start = time.perf_counter()
     clean_df = analyzer.fit_transform()
-    logger.debug(f"DataAnalyzer fit_transform output rows: {len(clean_df)}")
+    elapsed_analyzer = time.perf_counter() - start
+    logger.debug(f"DataAnalyzer.fit_transform completed in {elapsed_analyzer:.4f} seconds with {len(clean_df)} output rows")
 
+    start = time.perf_counter()
     pre_df = FeatureEngineer(clean_df).fit_transform()
-    logger.debug(f"FeatureEngineer fit_transform output rows: {len(pre_df)}")
+    elapsed_fe = time.perf_counter() - start
+    logger.debug(f"FeatureEngineer.fit_transform completed in {elapsed_fe:.4f} seconds with {len(pre_df)} output rows")
 
     y = pre_df["log_trip_duration"]
     X = pre_df.drop(columns=["log_trip_duration"])
@@ -80,8 +87,14 @@ def train_model(
         logger.debug(f"Unsupported model type: {model_type}")
         sys.exit(f"[train] Unsupported model type: {model_type}")
 
+    start = time.perf_counter()
     model.train(model_type, X, y, warm_start)
-    logger.debug("Model training completed")
+    elapsed_train = time.perf_counter() - start
+    logger.debug(f"Model training completed in {elapsed_train:.4f} seconds")
+
+    current, peak = tracemalloc.get_traced_memory()
+    tracemalloc.stop()
+    logger.debug(f"Memory usage: Current = {current / 1024 / 1024:.2f} MB, Peak = {peak / 1024 / 1024:.2f} MB")
 
     model.save(LATEST_MODEL_PATH)
     model.save(f"model_storage/{model_type}_model.pkl")

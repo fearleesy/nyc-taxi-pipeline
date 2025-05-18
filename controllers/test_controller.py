@@ -1,5 +1,7 @@
 import os
 import sys
+import time
+import tracemalloc
 
 from src.data_analyzer import DataAnalyzer
 from src.model_trainer import TaxiModel
@@ -51,20 +53,30 @@ def test_model(
     df = load_data(file_path, source_type)
     logger.debug(f"Loaded test data with {len(df)} rows")
 
+    tracemalloc.start()
+
+    start = time.perf_counter()
     analyzer = DataAnalyzer(df)
-    logger.debug("Initialized DataAnalyzer")
-
     clean_df = analyzer.fit_transform()
-    logger.debug(f"DataAnalyzer fit_transform output rows: {len(clean_df)}")
+    elapsed_analyzer = time.perf_counter() - start
+    logger.debug(f"DataAnalyzer.fit_transform completed in {elapsed_analyzer:.4f} seconds with {len(clean_df)} output rows")
 
+    start = time.perf_counter()
     pre_df = FeatureEngineer(clean_df).fit_transform()
-    logger.debug(f"FeatureEngineer fit_transform output rows: {len(pre_df)}")
+    elapsed_fe = time.perf_counter() - start
+    logger.debug(f"FeatureEngineer.fit_transform completed in {elapsed_fe:.4f} seconds with {len(pre_df)} output rows")
 
     y_true = pre_df["log_trip_duration"]
     X = pre_df.drop(columns=["log_trip_duration"])
     logger.debug(f"Prepared features X with shape {X.shape} and target y with length {len(y_true)}")
 
-    logger.debug("Running model prediction")
+    start = time.perf_counter()
     score = model.predict(X, y_true, metric)
-    
+    elapsed_predict = time.perf_counter() - start
+    logger.debug(f"Model prediction completed in {elapsed_predict:.4f} seconds")
+
+    current, peak = tracemalloc.get_traced_memory()
+    tracemalloc.stop()
+    logger.debug(f"Memory usage: Current = {current / 1024 / 1024:.2f} MB, Peak = {peak / 1024 / 1024:.2f} MB")
+
     logger.info(f"[test] {metric}: {score:.2f} seconds on {len(y_true)} samples.")
