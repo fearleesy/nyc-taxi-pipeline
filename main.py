@@ -185,16 +185,16 @@ def _create_parser() -> argparse.ArgumentParser:
     p_test.add_argument(
         "--metric",
         type=str,
-        default="MAE",
+        default="RMSE",
         choices=["RMSE", "MAE"],
         help="Evaluation metric to report.",
     )
 
     # summ
-    p_sum = subparsers.add_parser("summ", help="Show basic statistics for a CSV slice.")
-    p_sum.add_argument("db", nargs="?", default="work.db", help="CSV file to summarize.")
-    p_sum.add_argument("start", nargs="?", type=int, default=0, help="Start index of slice.")
-    p_sum.add_argument("end", nargs="?", type=int, default=None, help="End index (exclusive) of slice.")
+    p_sum = subparsers.add_parser("summ", help="Show basic statistics for a SQLite database.")
+    p_sum.add_argument("--db", nargs="?", default="work.db", help="DB file to summarize.")
+    p_sum.add_argument("-s", "--start", nargs="?", type=int, default=0, help="Start index of slice.")
+    p_sum.add_argument("-e", "--end", nargs="?", type=int, default=None, help="End index (exclusive) of slice.")
 
     return parser
 
