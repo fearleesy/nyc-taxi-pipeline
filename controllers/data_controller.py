@@ -7,6 +7,9 @@ from src.db_manager import DBManager
 from src.data_analyzer import DataAnalyzer
 from utils.io_helpers import load_data
 from utils.batch_logging import compute_batch_meta, append_log_entry
+from utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 def add_data(
@@ -32,25 +35,40 @@ def add_data(
     source_type : str
         Format of the data source (e.g., "csv", "json").
     """
+    logger.debug(f"add_data started with file_path={file_path}, db_path={db_path}, slice=[{start}:{end}], source_type={source_type}")
+
+
     if not os.path.exists(file_path):
+        logger.debug(f"File not found: {file_path}")
         sys.exit(f"[add_data] File not found: {file_path}")
 
     new_df = load_data(file_path, source_type)
+    logger.debug(f"Loaded data with {len(new_df)} rows from {file_path}")
+
     if new_df.empty:
+        logger.debug(f"No rows found in file: {file_path}")
         sys.exit(f"[add_data] No rows found in {file_path}.")
 
     sliced_df = new_df.iloc[start:end]
+    logger.debug(f"Sliced data frame size: {len(sliced_df)} rows")
+
     if sliced_df.empty:
+        logger.debug(f"No data in slice: {start}:{end}")
         sys.exit(f"[add_data] No data in slice [{start}:{end}].")
 
     start_time = time.time()
 
+    logger.debug("Initializing DBManager...")
     db = DBManager(db_path)
     db.insert_df(sliced_df)
     total_length = db.get_length()
+    logger.debug("Insert complete.")
+    logger.debug(f"Total DB size after insertion: {total_length} rows.")
 
     elapsed_time_sec = round(time.time() - start_time, 2)
+    logger.debug(f"Time taken for DB insertion: {elapsed_time_sec} seconds.")
 
+    logger.debug("Computing metadata for batch log...")
     meta = compute_batch_meta(
         file_path=file_path,
         batch_size=len(sliced_df),
@@ -61,11 +79,14 @@ def add_data(
         elapsed_time_sec=elapsed_time_sec,
         num_duplicates=sliced_df.duplicated().sum()
     )
+    logger.debug(f"Metadata: {meta}")
     append_log_entry(meta)
+    logger.debug("Batch log updated.")
 
-    print(
+
+    logger.info(
         f"[add_data] Inserted {len(sliced_df)} rows into {db_path}. "
-        f"Total length: {total_length}"
+        f"Total length: {total_length}, time: {elapsed_time_sec}s"
     )
 
 
@@ -86,21 +107,31 @@ def summarize(
     end : int or None
         Ending index (exclusive) of the slice. If None, summarize from `start` to the end of the table.
     """
+    logger.debug(f"summarize started with db_path={db_path}, slice=[{start}:{end}]")
+
+    logger.debug("Initializing DBManager...")
     db = DBManager(db_path)
     df_slice = db.fetch_range(start, end)
-    if df_slice.empty:
-        sys.exit(f"[summarize] No data in slice [{start}:{end}].")
+    logger.debug(f"Fetched {len(df_slice)} rows from DB slice")
 
+    if df_slice.empty:
+        logger.debug(f"No data in range: {start}:{end}")
+        sys.exit(f"[summarize] No data in slice [{start}:{end}].")
+    
+    logger.debug("Creating DataAnalyzer instance...")
     analyzer = DataAnalyzer(df_slice)
 
+    logger.debug("Calculating basic statistics...")
     try:
         stats = analyzer._calculate_basic_stats()
-    except AttributeError:
+        logger.debug(f"[summarize] Computed stats: {stats}")
+    except AttributeError as e:
+        logger.exception("DataAnalyzer missing '_calculate_basic_stats'")
         sys.exit("[summarize] DataAnalyzer does not implement _calculate_basic_stats().")
 
-    print("Statistics for the current sample:")
-    for category, metrics in stats.items():
-        print(f"{category}:")
-        for name, value in metrics.items():
-            print(f"\t{name}: {value}")
-        print()
+    logger.info("[summarize] Statistics for the current sample writed to stats/data_quality_report.json")
+    # for category, metrics in stats.items():
+    #     logger.debug(f"{category}:")
+    #     for name, value in metrics.items():
+    #         logger.debug(f"\t{name}: {value}")
+    #     logger.debug("") 

@@ -1,0 +1,37 @@
+[2025-05-19 00:59:08] DEBUG in __main__: Executing command: add_data
+[2025-05-19 00:59:08] DEBUG in controllers.data_controller: add_data started with file_path=train.csv, db_path=work.db, slice=[100:2000], source_type=csv
+[2025-05-19 00:59:09] DEBUG in controllers.data_controller: Loaded data with 500000 rows from train.csv
+[2025-05-19 00:59:09] DEBUG in controllers.data_controller: Sliced data frame size: 1900 rows
+[2025-05-19 00:59:09] DEBUG in controllers.data_controller: Initializing DBManager...
+[2025-05-19 00:59:09] DEBUG in controllers.data_controller: Insert complete.
+[2025-05-19 00:59:09] DEBUG in controllers.data_controller: Total DB size after insertion: 17500 rows.
+[2025-05-19 00:59:09] DEBUG in controllers.data_controller: Time taken for DB insertion: 0.07 seconds.
+[2025-05-19 00:59:09] DEBUG in controllers.data_controller: Computing metadata for batch log...
+[2025-05-19 00:59:09] DEBUG in controllers.data_controller: Metadata: {'timestamp': '2025-05-19T00:59:09', 'file_path': 'train.csv', 'batch_size': 1900, 'db_total_size': 17500, 'batch_ratio': 10.86, 'csv_total_size': 500000, 'slice_start': 100, 'slice_end': 2000, 'elapsed_time_sec': 0.07, 'num_duplicates': 0}
+[2025-05-19 00:59:09] DEBUG in controllers.data_controller: Batch log updated.
+[2025-05-19 00:59:09] INFO in controllers.data_controller: [add_data] Inserted 1900 rows into work.db. Total length: 17500, time: 0.07s
+[2025-05-19 00:59:44] DEBUG in __main__: Executing command: train
+[2025-05-19 00:59:44] DEBUG in controllers.train_controller: Starting training: model_type=None, warm_start=False, db_path=work.db, start=0, end=None
+[2025-05-19 00:59:44] DEBUG in controllers.train_controller: Fetched 17500 rows from DB slice [0:None]
+[2025-05-19 00:59:44] DEBUG in controllers.train_controller: Initialized DataAnalyzer
+[2025-05-19 00:59:44] DEBUG in controllers.train_controller: Dataset summary: {'n_samples': 17500, 'n_features': 11, 'duplicate_rate': 0.8914285714285715, 'low_unique_cols': 3}
+[2025-05-19 00:59:44] DEBUG in controllers.train_controller: Uniqueness stats: {'id': {'unique': 1900, 'duplicates': 15600, 'value': 0.1086}, 'vendor_id': {'unique': 2, 'duplicates': 17498, 'value': 0.0001}, 'pickup_datetime': {'unique': 1900, 'duplicates': 15600, 'value': 0.1086}, 'dropoff_datetime': {'unique': 1900, 'duplicates': 15600, 'value': 0.1086}, 'passenger_count': {'unique': 6, 'duplicates': 17494, 'value': 0.0003}, 'pickup_longitude': {'unique': 1690, 'duplicates': 15810, 'value': 0.0966}, 'pickup_latitude': {'unique': 1803, 'duplicates': 15697, 'value': 0.103}, 'dropoff_longitude': {'unique': 1726, 'duplicates': 15774, 'value': 0.0986}, 'dropoff_latitude': {'unique': 1817, 'duplicates': 15683, 'value': 0.1038}, 'store_and_fwd_flag': {'unique': 2, 'duplicates': 17498, 'value': 0.0001}, 'trip_duration': {'unique': 1115, 'duplicates': 16385, 'value': 0.0637}}
+[2025-05-19 00:59:44] DEBUG in controllers.train_controller: Auto-selected model type: Lasso
+[2025-05-19 00:59:44] DEBUG in controllers.train_controller: DataAnalyzer fit_transform output rows: 17248
+[2025-05-19 00:59:45] DEBUG in controllers.train_controller: FeatureEngineer fit_transform output rows: 16911
+[2025-05-19 00:59:45] DEBUG in controllers.train_controller: Prepared features X with shape (16911, 23) and target y with length 16911
+[2025-05-19 00:59:45] DEBUG in controllers.train_controller: Created TaxiModel instance with model_type=Lasso
+[2025-05-19 01:00:06] DEBUG in controllers.train_controller: Model training completed
+[2025-05-19 01:00:06] INFO in controllers.train_controller: Trained Lasso on 17248 rows → saved to model_storage/latest_model.pkl & model_storage/Lasso_model.pkl.
+[2025-05-19 01:00:28] DEBUG in __main__: Executing command: test
+[2025-05-19 01:00:28] DEBUG in controllers.test_controller: Starting test_model with model_name=latest, file_path=test.csv, metric=RMSE, source_type=csv
+[2025-05-19 01:00:28] DEBUG in controllers.test_controller: Resolved model path: model_storage/latest_model.pkl
+[2025-05-19 01:00:28] DEBUG in controllers.test_controller: Loading model...
+[2025-05-19 01:00:28] DEBUG in controllers.test_controller: Loading test data...
+[2025-05-19 01:00:28] DEBUG in controllers.test_controller: Loaded test data with 531 rows
+[2025-05-19 01:00:28] DEBUG in controllers.test_controller: Initialized DataAnalyzer
+[2025-05-19 01:00:28] DEBUG in controllers.test_controller: DataAnalyzer fit_transform output rows: 522
+[2025-05-19 01:00:28] DEBUG in controllers.test_controller: FeatureEngineer fit_transform output rows: 511
+[2025-05-19 01:00:28] DEBUG in controllers.test_controller: Prepared features X with shape (511, 23) and target y with length 511
+[2025-05-19 01:00:28] DEBUG in controllers.test_controller: Running model prediction
+[2025-05-19 01:00:28] INFO in controllers.test_controller: [test] RMSE: 0.62 seconds on 511 samples.
