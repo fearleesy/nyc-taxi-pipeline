@@ -1,6 +1,7 @@
 import argparse
 import os
 import sys
+import time
 from typing import Optional
 
 import pandas as pd
@@ -9,6 +10,7 @@ from src.data_analyzer import DataAnalyzer
 from src.model_trainer import TaxiModel
 from src.db_manager import DBManager
 from src.preprocessing_pipeline import FeatureEngineer
+from src.logging import compute_batch_meta, append_log_entry
 
 
 LATEST_MODEL_PATH = "models/latest_model.pkl"
@@ -39,8 +41,26 @@ def add_data(file_path: str, db_path: str = "work.db", start: int = 0, end: Opti
     if sliced_df.empty:
         sys.exit(f"[add_data] No data in slice [{start}:{end}].")
 
+    start_time = time.time()
+
     db = DBManager(db_path)
     db.insert_df(sliced_df)
+    total_length = db.get_length()
+
+    elapsed_time_sec = round(time.time() - start_time, 2)
+
+    meta = compute_batch_meta(
+        file_path=file_path,
+        batch_size=len(sliced_df),
+        db_total_size=total_length,
+        csv_total_size=len(new_df),
+        start=start,
+        end=end,
+        elapsed_time_sec=elapsed_time_sec,
+        num_duplicates=sliced_df.duplicated().sum()
+    )
+    append_log_entry(meta)
+
     print(f"[add_data] Inserted {len(sliced_df)} rows into {db_path}. Total length: {db.get_length()}")
 
 def train_model(model_type: str, warm_start: bool, db_path: str, start: int = 0, end: Optional[int] = None) -> None:
