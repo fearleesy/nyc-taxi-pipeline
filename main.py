@@ -2,6 +2,7 @@ import argparse
 import os
 import sys
 import time
+import random
 from typing import Optional
 
 import pandas as pd
@@ -63,6 +64,60 @@ def add_data(file_path: str, db_path: str = "work.db", start: int = 0, end: Opti
 
     print(f"[add_data] Inserted {len(sliced_df)} rows into {db_path}. Total length: {db.get_length()}")
 
+
+def quick_dataset_summary(df):
+    n_samples, n_features = df.shape
+    duplicate_rate = df.duplicated().mean()
+    ratio_unique = df.nunique() / n_samples
+    low_unique_cols = (ratio_unique < 0.01).sum()
+    return {
+        "n_samples": n_samples,
+        "n_features": n_features,
+        "duplicate_rate": duplicate_rate,
+        "low_unique_cols": low_unique_cols,
+    }
+
+def auto_select_model(
+    df_stats: dict,
+    uniqueness: dict,
+    rng: random.Random | None = None,
+) -> str:
+    rng = rng or random
+
+    n = df_stats["n_samples"]
+    dup = df_stats["duplicate_rate"]
+    low_unique = df_stats["low_unique_cols"]
+
+    candidates: set[str] = set()
+    if n < 1_000:
+        candidates.update(["LR", "Ridge"])
+    elif dup > 0.30 or low_unique > 2:
+        candidates.update(["Ridge", "Lasso"])
+    else:
+        candidates.update(["RF", "Ridge", "DT"])
+
+    mostly_unique_cols = [c for c, s in uniqueness.items() if s.get("value", 1) > 0.95]
+    very_low_unique = [c for c, s in uniqueness.items() if s.get("value", 0) < 0.05]
+    has_categorical = any(c in {"vendor_id", "store_and_fwd_flag"} for c in very_low_unique)
+
+    if len(mostly_unique_cols) >= 3:
+        # many ID‑like columns → exclude trees, add Lasso        
+        candidates.discard("RF")
+        candidates.discard("DT")
+        candidates.update(["Ridge", "Lasso"])
+
+    if has_categorical and len(very_low_unique) > 2:
+        # many categorical features → keep linear models
+        candidates.update(["LR", "Ridge"])
+
+    if not candidates:
+        candidates.add("Ridge")
+
+    chosen = rng.choice(sorted(candidates))
+    print(f"[auto_select_model] Candidates: {sorted(candidates)} → Chosen: {chosen}")
+    return chosen
+
+
 def train_model(model_type: str, warm_start: bool, db_path: str, start: int = 0, end: Optional[int] = None) -> None:
     """Train *model_type* on data at *csv_path* and save to disk.
 
@@ -85,8 +140,12 @@ def train_model(model_type: str, warm_start: bool, db_path: str, start: int = 0,
         sys.exit(
             f"[train] No training data found in slice [{start}:{end}] of {db_path}."
         )
-
+    
     analyzer = DataAnalyzer(df)
+    if model_type is None:
+        df_stats = quick_dataset_summary(df)
+        uniqueness = analyzer.calculate_uniqueness()
+        model_type = auto_select_model(df_stats, uniqueness)
     clean_df = analyzer.fit_transform()
 
     preprocesser = FeatureEngineer(clean_df)
@@ -184,7 +243,7 @@ def _create_parser() -> argparse.ArgumentParser:
 
     # train
     p_train = subparsers.add_parser("train", help="Train a model on given CSV data.")
-    p_train.add_argument("model", type=str, help="Model type (LR, KNN, DT, RF, Lasso, Ridge, ...).")
+    p_train.add_argument("--model", type=str, help="Model type (LR, KNN, DT, RF, Lasso, Ridge, ...).")
     p_train.add_argument(
         "-w", "--warm_start",
         type=int,
