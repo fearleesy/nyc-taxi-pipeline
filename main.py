@@ -16,25 +16,45 @@ from src.batch_logging import compute_batch_meta, append_log_entry
 
 LATEST_MODEL_PATH = "models/latest_model.pkl"
 
+def load_data(file_path: str, source_type: str) -> pd.DataFrame:
+    if source_type == "csv":
+        return pd.read_csv(file_path)
+    elif source_type == "json":
+        return pd.read_json(file_path)
+    elif source_type == "parquet":
+        return pd.read_parquet(file_path)
+    elif source_type == "api":
+        import requests
+        response = requests.get(file_path)
+        if response.status_code != 200:
+            sys.exit(f"[add_data] API request failed: {response.status_code}")
+        return pd.read_json(response.text)
+    else:
+        sys.exit(f"[add_data] Unsupported source type: {source_type}")
 
-def add_data(file_path: str, db_path: str = "work.db", start: int = 0, end: Optional[int] = None) -> None:
-    """Load rows [start:end] from CSV and append them to the SQLite database.
+
+def add_data(file_path: str, db_path: str = "work.db", start: int = 0, end: Optional[int] = None, source_type: str = "csv") -> None:
+    """Load rows [start:end] from file and append them to the SQLite database.
 
     Parameters
     ----------
     file_path : str
-        Path to the CSV file with raw trip data to add.
+        Path to the file with raw trip data to add.
     db_path : str
         Target DB file that accumulates all training data.
     start : int
         Starting index of the rows to include from file_path.
     end : int, optional
         Ending index (exclusive) of the rows to include from file_path.
+    source_type : str
+        Format of data.
     """
     if not os.path.exists(file_path):
         sys.exit(f"[add_data] File not found: {file_path}")
 
-    new_df = pd.read_csv(file_path)
+    print(source_type)
+    print(file_path)
+    new_df = load_data(file_path, source_type)
     if new_df.empty:
         sys.exit(f"[add_data] No rows found in {file_path}.")
 
@@ -167,27 +187,29 @@ def train_model(model_type: str, warm_start: bool, db_path: str, start: int = 0,
         f"[train] Trained {model_type} on {len(clean_df)} rows → saved to {LATEST_MODEL_PATH} & models/{model_type}_model.pkl."
     )
 
-def test_model(model_name: str, csv_path: str, metric: str = "MAE") -> None:
+def test_model(model_name: str, file_path: str, metric: str = "RMSE", source_type: str = "csv") -> None:
     """Evaluate a previously-saved model against *csv_path*.
 
     Parameters
     ----------
     model_name : str
         Model identifier ("latest" or the base name used when training).
-    csv_path : str
-        Path to CSV with evaluation data.
+    file_path : str
+        Path to file with evaluation data.
     metric : str, optional
-        Evaluation metric (RMSE or MAE). Defaults to MAE.
+        Evaluation metric (RMSE or MAE). Defaults to RMSE.
+    source_type: str
+        Format of data file.
     """
-    if not os.path.exists(csv_path):
-        sys.exit(f"[test] Test data not found: {csv_path}")
+    if not os.path.exists(file_path):
+        sys.exit(f"[test] Test data not found: {file_path}")
 
     model_path = LATEST_MODEL_PATH if model_name == "latest" else f"models/{model_name}_model.pkl"
     if not os.path.exists(model_path):
         sys.exit(f"[test] Model file not found: {model_path}")
 
     model = TaxiModel.load(model_path)
-    df = pd.read_csv(csv_path)
+    df = load_data(file_path, source_type)
 
     analyzer = DataAnalyzer(df)
     clean_df = analyzer.fit_transform()
@@ -236,10 +258,13 @@ def _create_parser() -> argparse.ArgumentParser:
 
     # add_data
     p_add = subparsers.add_parser("add_data", help="Append raw data to the main training SQLite database.")
-    p_add.add_argument("--file_path", type=str, default="train.csv", help="Path to CSV file with new data to add.")
+    p_add.add_argument("--file_path", type=str, default="train.csv", help="Path to file with new data to add.")
     p_add.add_argument("--train_db", type=str, default="work.db", help="Path to the current database.")
     p_add.add_argument("-s", "--start", type=int, default=0, help="Start index of rows to add.")
     p_add.add_argument("-e", "--end", type=int, default=None, help="End index (exclusive) of rows to add.")
+    p_add.add_argument("--source_type", type=str, default="csv", help="Format of data")
+
+    
 
     # train
     p_train = subparsers.add_parser("train", help="Train a model on given CSV data.")
@@ -266,6 +291,7 @@ def _create_parser() -> argparse.ArgumentParser:
         choices=["RMSE", "MAE"],
         help="Evaluation metric to report.",
     )
+    p_test.add_argument("--source_type", type=str, default="csv", help="Format of data.")
 
     # summ
     p_sum = subparsers.add_parser("summ", help="Show basic statistics for a SQLite database.")
@@ -281,11 +307,11 @@ def main(argv: Optional[list[str]] = None) -> None:
   
 
     if args.command == "add_data":
-        add_data(args.file_path, args.train_db, args.start, args.end)
+        add_data(args.file_path, args.train_db, args.start, args.end, args.source_type)
     elif args.command == "train":
         train_model(args.model, bool(args.warm_start), args.db, args.start, args.end)
     elif args.command == "test":
-        test_model(args.model, args.db, args.metric)
+        test_model(args.model, args.db, args.metric, args.source_type)
     elif args.command == "summ":
         summarize(args.db, args.start, args.end)
     else:
