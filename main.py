@@ -10,7 +10,7 @@ from src.data_analyzer import DataAnalyzer
 from src.model_trainer import TaxiModel
 from src.db_manager import DBManager
 from src.preprocessing_pipeline import FeatureEngineer
-from src.logging import compute_batch_meta, append_log_entry
+from src.batch_logging import compute_batch_meta, append_log_entry
 
 
 LATEST_MODEL_PATH = "models/latest_model.pkl"
@@ -91,8 +91,6 @@ def train_model(model_type: str, warm_start: bool, db_path: str, start: int = 0,
 
     preprocesser = FeatureEngineer(clean_df)
     preprocessed_df = preprocesser.fit_transform()
-
-    print(preprocessed_df)
 
     y = preprocessed_df["log_trip_duration"]
     X = preprocessed_df.drop(columns=["log_trip_duration"])
