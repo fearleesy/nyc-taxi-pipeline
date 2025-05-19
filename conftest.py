@@ -6,8 +6,4 @@ def model_name():
 
 @pytest.fixture
 def file_path():
-    return "train.csv"
-
-@pytest.fixture
-def file_path():
-    return "train.csv"
+    return "test.csv"
