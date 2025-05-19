@@ -83,9 +83,9 @@ def train_model(
     model = TaxiModel(model_type)
     logger.debug(f"Created TaxiModel instance with model_type={model_type}")
 
-    if model.pipeline == 0:
-        logger.debug(f"Unsupported model type: {model_type}")
-        sys.exit(f"[train] Unsupported model type: {model_type}")
+    # if model.pipeline == 0:
+    #     logger.debug(f"Unsupported model type: {model_type}")
+    #     sys.exit(f"[train] Unsupported model type: {model_type}")
 
     start = time.perf_counter()
     model.train(model_type, X, y, warm_start)
