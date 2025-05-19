@@ -19,7 +19,7 @@ def create_parser() -> argparse.ArgumentParser:
     # train
     p_train = subparsers.add_parser("train", help="Train a model on database records.")
     p_train.add_argument("--model", type=str, help="Model type (LR, KNN, DT, RF, Lasso, Ridge, ...).")
-    p_train.add_argument("-w", "--warm_start", action="store_true", help="Continue training if model supports it.")
+    p_train.add_argument("-w", "--warm_start",  type=int, choices=[0, 1], default=0, help="Continue training if model supports it.")
     p_train.add_argument("--db", type=str, default="work.db", help="SQLite DB file with training data.")
     p_train.add_argument("-s", "--start", type=int, default=0, help="Start index for training data.")
     p_train.add_argument("-e", "--end", type=int, default=None, help="End index (exclusive) for training data.")
