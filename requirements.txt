@@ -9,7 +9,3 @@ haversine==2.9.0
 matplotlib
 seaborn
 pytest
-tracemalloc
-haversine
-datetime
-argparse
