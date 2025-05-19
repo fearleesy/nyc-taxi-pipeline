@@ -1,0 +1,50 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+    - name: Run tests
+      run: |
+        pytest
+
+  train:
+      needs: tests
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+
+        - name: Install dependencies
+          run: |
+            python -m pip install --upgrade pip
+            pip install -r requirements.txt
+        
+        - name: Run training script
+          run: |
+            python3.11 main.py add_data --file_path train.csv --start 100 --end 200
+            python3.11 main.py train --model LR --db work.db -s 100 -e 200
+
+        - name: Upload logs
+          uses: actions/upload-artifact@v4
+          with:
+            name: training-logs
+            path: training.log
