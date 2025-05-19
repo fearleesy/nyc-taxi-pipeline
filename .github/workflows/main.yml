@@ -23,6 +23,8 @@ jobs:
           pip install -r requirements.txt
 
     - name: Run tests
+      env:
+        PYTHONPATH: ${{ github.workspace }}
       run: |
         pytest
 
@@ -39,6 +41,8 @@ jobs:
             pip install -r requirements.txt
         
         - name: Run training script
+          env:
+            PYTHONPATH: ${{ github.workspace }}
           run: |
             python3.11 main.py add_data --file_path train.csv --start 100 --end 200
             python3.11 main.py train --model LR --db work.db -s 100 -e 200

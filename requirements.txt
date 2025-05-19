@@ -8,3 +8,4 @@ folium==0.19.5
 haversine==2.9.0
 matplotlib
 seaborn
+pytest
