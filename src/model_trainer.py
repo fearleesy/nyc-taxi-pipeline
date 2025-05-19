@@ -18,10 +18,10 @@ class TaxiModel:
         self.pipeline = self._build_pipeline(model_name)
     
     def _build_pipeline(self, model_name):
-        numeric_features = ['passenger_count', 'pickup_longitude', 
+        numeric_features = ['pickup_longitude', 
                           'pickup_latitude', 'dropoff_longitude',
                           'dropoff_latitude']
-        categorical_features = ['vendor_id']
+        categorical_features = ['passenger_count', 'vendor_id']
         
         preprocessor = ColumnTransformer(
             transformers=[
@@ -86,7 +86,7 @@ class TaxiModel:
                 'model__max_iter': range(1000, 10000, 1000)       
             },
             "Ridge" : {
-                'alpha': np.logspace(-4, 4, 5),
+                'model__alpha': np.logspace(-4, 4, 5),
                 'solver': ['auto', 'svd', 'cholesky', 'lsqr'], 
             },
             'KNN': {
