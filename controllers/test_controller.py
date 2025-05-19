@@ -76,12 +76,17 @@ def test_model(
     logger.debug(f"Prepared features X with shape {X.shape} and target y with length {len(y_true)}")
 
     start = time.perf_counter()
-    score = model.predict(X, y_true, metric)
+    score1 = model.predict(X, y_true, "RMSE")
+    score2 = model.predict(X, y_true, "MAE")
     elapsed_predict = time.perf_counter() - start
     logger.debug(f"Model prediction completed in {elapsed_predict:.4f} seconds")
 
     current, peak = tracemalloc.get_traced_memory()
     tracemalloc.stop()
     logger.debug(f"Memory usage: Current = {current / 1024 / 1024:.2f} MB, Peak = {peak / 1024 / 1024:.2f} MB")
-
-    logger.info(f"[test] {metric}: {score:.2f} seconds on {len(y_true)} samples.")
+    if metric == "MAE":
+        logger.info(f"[test] {metric}: {score2:.2f} seconds on {len(y_true)} samples.")
+    else:
+        logger.info(f"[test] {metric}: {score1:.2f} seconds on {len(y_true)} samples.")
+    
+    return score1, score2
