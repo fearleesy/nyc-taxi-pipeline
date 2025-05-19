@@ -13,8 +13,12 @@ import os
 
 if not os.path.exists("stats"):
     os.mkdir("stats")
-data_quiality_path = "stats/DataAnalisis.txt"
+data_quality_path = "stats/DataAnalisis.txt"
 data_quality_report_path = "stats/data_quality_report.json"
+img_before_cleaning_path = "stats/plots_before_cleaning"
+img_after_cleaning_path = "stats/plots_after_cleaning"
+stat_path = 'stats/statistics'
+
 
 class DataAnalyzer:
     def __init__(self, df: pd.DataFrame,
@@ -27,12 +31,11 @@ class DataAnalyzer:
         }
         self.metrics = {}
         self.cleaning_report = {}
-        self.historical_stats = None
         self.scaler = StandardScaler()
         self.numeric_cols = []
         self.categorical_cols = []
-
         self._detect_column_types()
+        self.historical_stats = None
 
     def _detect_column_types(self):
         self.numeric_cols = self.df.select_dtypes(include=['number']).columns.tolist()
@@ -85,7 +88,7 @@ class DataAnalyzer:
         df = df[(df['trip_duration'] <= max_trip_duration) & (df['trip_duration'] >= min_trip_duration)]
         df = df[df["passenger_count"] <= 6]
 
-        df = df[df["trip_duration"] > 12 * 3600]
+        df = df[df["trip_duration"] <= 12 * 3600]
         df = df[df["trip_duration"] >= 60]
 
         if not self.metrics:
@@ -144,11 +147,9 @@ class DataAnalyzer:
         metric_df['completeness'] = metric_df['completeness'].fillna('Not checked')
         metric_df['uniqueness'] = metric_df['uniqueness'].fillna('Not checked')
         
-        return metric_df
+        return metric_df, nan_count
     
     def _calculate_basic_stats(self):
-
-        print(self.df)
         stats = {}
 
         for col in self.numeric_cols:
@@ -169,6 +170,24 @@ class DataAnalyzer:
         self.historical_stats = stats
         return stats
     
+    def save_stats(self):
+        def convert(obj):
+            if isinstance(obj, np.integer):
+                return int(obj)
+            elif isinstance(obj, np.floating):
+                return float(obj)
+            elif isinstance(obj, np.ndarray):
+                return obj.tolist()
+            elif isinstance(obj, pd.Timestamp):
+                return obj.isoformat()
+            raise TypeError(f"Object is not writable in JSON")
+        stats = self._calculate_basic_stats()
+        with open(stat_path, 'w') as f:
+            json.dump(stats, f, indent=2, default=convert)
+
+        return stats
+
+    
     def make_plot(self, df, filename):
         def calculate_haversine(row):
             start_point = (row['pickup_latitude'], row['pickup_longitude'])
@@ -179,7 +198,7 @@ class DataAnalyzer:
         df['log_haversine'] = np.log1p(df['haversine'])
         df = df.drop(columns=['haversine'])
         
-        #df['pickup_datetime'] = pd.to_datetime(df['pickup_datetime'])
+        df['pickup_datetime'] = pd.to_datetime(df['pickup_datetime'])
         df['day_of_week'] = df['pickup_datetime'].dt.day_of_week
         df['month'] = df['pickup_datetime'].dt.month
         df['hour'] = df['pickup_datetime'].dt.hour
@@ -227,23 +246,23 @@ class DataAnalyzer:
         plt.tight_layout()
         plt.savefig(filename, dpi=300, bbox_inches='tight')
 
-        #df.drop(columns=['log_haversine', '']
+        df = df.drop(columns=['log_haversine', 'day_of_week', 'month', 'hour'], )
 
 
     def fit_transform(self):
         self.calculate_all_metrics()
-        self.df['pickup_datetime'] = pd.to_datetime(self.df['pickup_datetime'])
-        self.make_plot(self.df, 'plots_before_cleaning')
+        self.make_plot(self.df, img_before_cleaning_path)
         
-
-        with open(data_quiality_path, "w", encoding="utf-8") as file:
+        with open(data_quality_path, "w", encoding="utf-8") as file:
             file.write("Качество данных до очистки:")
-            file.write(f"\n{self.get_quality_summary()}")
+            metric_df, nan_count = self.get_quality_summary()
+            file.write(f"\n{metric_df}")
+            file.write(f"\nКоличество NaN: {nan_count}")
+
         
             cleaned_df = self.clean_data()
             self.save_quality_report(data_quality_report_path)
-            self.make_plot(cleaned_df, 'plots_after_cleaning')
-
+            self.make_plot(cleaned_df, img_after_cleaning_path)
         
             file.write("\n\nОтчет об очистке:")
             file.write(f"\nИсходный размер: {self.cleaning_report['original_shape']}")
