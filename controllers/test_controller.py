@@ -40,7 +40,7 @@ def test_model(
         logger.debug(f"Test data not found: {file_path}")
         sys.exit(f"[test] Test data not found: {file_path}")
 
-    model_path = LATEST_MODEL_PATH if model_name == "latest" else f"models/{model_name}_model.pkl"
+    model_path = LATEST_MODEL_PATH if model_name == "latest" else f"model_storage/{model_name}_model.pkl"
     logger.debug(f"Resolved model path: {model_path}")
 
     if not os.path.exists(model_path):
