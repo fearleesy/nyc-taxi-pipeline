@@ -13,10 +13,12 @@ import numpy as np
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import MinMaxScaler, RobustScaler
 from sklearn.metrics import make_scorer, mean_absolute_error, mean_squared_error
-import matplotlib as plt
+#import matplotlib as plt
+import matplotlib.pyplot as plt
 from sklearn.model_selection import cross_val_score
 import json
 from datetime import datetime
+from sklearn.tree import plot_tree
 
 
 class TaxiModel:
@@ -200,7 +202,6 @@ class TaxiModel:
                         'top_results': top_results.to_dict('records'),
                         'best_params': grid_search.best_params_
                     })
-                #print(f"Лучшие значения кросс-валидации:\n {results[-1]['params', 'mean_test_score', 'std_test_score']}")
 
 
                 print(f"Модель: {model_name}")
@@ -282,6 +283,7 @@ class TaxiModel:
             json.dump(metadata, f, indent=2, ensure_ascii=False)
         '''
         return timestamp
+    
 
     
     @classmethod
