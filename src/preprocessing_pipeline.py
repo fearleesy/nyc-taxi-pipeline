@@ -1,3 +1,4 @@
+import json
 import numpy as np
 import pandas as pd
 from haversine import haversine, Unit
@@ -6,6 +7,24 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from utils.logger import get_logger
 
 logger = get_logger(__name__)
+
+with open('utils/params.json', 'r') as f:
+    config = json.load(f)
+
+jams_hours = config['trip_constraints']['jams_hours']
+
+airport1_coords = config['geo_parameters']['airport1_coords']
+airport2_coords = config['geo_parameters']['airport2_coords']
+
+
+top_quantile1 = config["data_parameters"]["top_quantile1"]
+low_quantile1 = config["data_parameters"]["low_quantile1"]
+
+lat = config["geo_parameters"]["city_center"]["lat"]
+lon = config["geo_parameters"]["city_center"]["lon"]
+lat_range = config["geo_parameters"]["city_center"]["lat_range"]
+lon_range = config["geo_parameters"]["city_center"]["lon_range"]
+radius = config['geo_parameters']['radius']
 
 
 class FeatureEngineer:
@@ -43,8 +62,7 @@ class FeatureEngineer:
         self.added_columns.append('log_haversine')
 
         def check_jamm(hour):
-            if 7 <= hour <= 9 or 16 <= hour <= 19:
-                return True
+            if jams_hours[0] <= hour <= jams_hours[1] or jams_hours[2] <= hour <= jams_hours[3]:                return True
             else:
                 return False
 
@@ -53,9 +71,9 @@ class FeatureEngineer:
         self.added_columns.append('is_jamm')
         self.added_columns.append('if_free')
 
-        airport1_coords = (40.6413, -73.7781)
-        airport2_coords = (40.6895, -74.1745)
-        radius = 2
+        # airport1_coords = (40.6413, -73.7781)
+        # airport2_coords = (40.6895, -74.1745)
+        # radius = 2
 
         df['start_at_airport1'] = df.apply(lambda row: haversine((row['pickup_latitude'], row['pickup_longitude']), airport1_coords, unit=Unit.KILOMETERS) <= radius, axis=1)
         df['end_at_airport1'] = df.apply(lambda row: haversine((row['dropoff_latitude'], row['dropoff_longitude']), airport1_coords, unit=Unit.KILOMETERS) <= radius, axis=1)
@@ -97,8 +115,8 @@ class FeatureEngineer:
     def clean_data(self):
         df = self.df
 
-        maxim = df['log_haversine'].quantile(0.995)
-        minim = df['log_haversine'].quantile(0.015)
+        maxim = df['log_haversine'].quantile(top_quantile1)
+        minim = df['log_haversine'].quantile(low_quantile1)
         df = df[(df['log_haversine'] <= maxim) & (df['log_haversine'] >= minim)]
 
         self.df_shape = df.shape
@@ -119,7 +137,7 @@ class FeatureEngineer:
 
         
 class MapGridTransformer(BaseEstimator, TransformerMixin):
-    def __init__(self, n_rows, n_cols, lat_center=40.7831, lon_center=-73.9712, lat_range=0.15, lon_range=0.15):
+    def __init__(self, n_rows, n_cols, lat_center=lat, lon_center=lon, lat_range=lat_range, lon_range=lon_range):
         self.n_rows = n_rows
         self.n_cols = n_cols
         self.lat_center = lat_center

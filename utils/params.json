@@ -1,0 +1,34 @@
+{
+  "data_parameters": {
+    "base_batch_size": 2000,
+    "base_data_type": "csv",
+    "completeness": 0.75,
+    "uniqueness": 0.25,
+    "quantiles": [0.05, 0.25, 0.5, 0.75, 0.95],
+    "top_quantile1": 0.995,
+    "low_quantile1": 0.01,
+    "top_quantile2": 0.995,
+    "low_quantile2": 0.015
+  },
+  "trip_constraints": {
+    "MAX_passenger_count": 6,
+    "MAX_trip_duration": 43200,
+    "MIN_trip_duration": 60,
+    "jams_hours": [7, 9, 16, 19]
+  },
+  "geo_parameters": {
+    "airport1_coords": [40.6413, -73.7781],
+    "airport2_coords": [40.6895, -74.1745],
+    "radius": 2,
+    "city_center": {
+      "lat": 40.7831,
+      "lon": -73.9712,
+      "lat_range": 0.15,
+      "lon_range": 0.15
+    }
+  }
+}
+
+
+
+
