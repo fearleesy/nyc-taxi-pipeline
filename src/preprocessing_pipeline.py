@@ -3,6 +3,9 @@ import pandas as pd
 from haversine import haversine, Unit
 import folium
 from sklearn.base import BaseEstimator, TransformerMixin
+from utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class FeatureEngineer:
@@ -60,6 +63,10 @@ class FeatureEngineer:
         df['start_at_airport2'] = df.apply(lambda row: haversine((row['pickup_latitude'], row['pickup_longitude']), airport2_coords, unit=Unit.KILOMETERS) <= radius, axis=1)
         df['end_at_airport2'] = df.apply(lambda row: haversine((row['dropoff_latitude'], row['dropoff_longitude']), airport2_coords, unit=Unit.KILOMETERS) <= radius, axis=1)
 
+        self.added_columns.append('start_at_airport1')
+        self.added_columns.append('start_at_airport2')
+        self.added_columns.append('end_at_airport1')
+        self.added_columns.append('end_at_airport2')
 
         df['is_airport'] = (
             df['start_at_airport1'] |
@@ -68,7 +75,6 @@ class FeatureEngineer:
             df['end_at_airport2']
         )
         self.added_columns.append('is_airport')
-        df.drop(columns=['start_at_airport1','start_at_airport2','end_at_airport1','end_at_airport2'], inplace=True)
 
         df['vendor_id'] = df['vendor_id'] - 1
 
@@ -82,26 +88,7 @@ class FeatureEngineer:
         transformer = MapGridTransformer(n_rows=7, n_cols=7)
         transformer.fit(df)
         df = transformer.transform(df)
-
-        rotation_angle = np.radians(29)
-
-        def rotate_coordinates(lat, lon, angle):
-            lat_rot = lat * np.cos(angle) - lon * np.sin(angle)
-            lon_rot = lat * np.sin(angle) + lon * np.cos(angle)
-            return (lat_rot, lon_rot)
-
-        df['pickup_latitude_rot'], df['pickup_longitude_rot'] = rotate_coordinates(
-            df['pickup_latitude'], df['pickup_longitude'], rotation_angle)
-        df['dropoff_latitude_rot'], df['dropoff_longitude_rot'] = rotate_coordinates(
-            df['dropoff_latitude'], df['dropoff_longitude'], rotation_angle)
-
-        df['manh_distance'] = (
-            np.abs(df['pickup_latitude_rot'] - df['dropoff_latitude_rot']) +
-            np.abs(df['pickup_longitude_rot'] - df['dropoff_longitude_rot'])
-        )
-
-        df['log_haversine'] = np.log1p(df['manh_distance'])
-        df.drop(columns='manh_distance', inplace=True)
+        
         self.categorical_cols = ['day_of_week', 'month', 'hour', 'is_jamm', 'is_airport', 'vendor_id', 'store_and_fwd_flag', 'passenger_count']
         self.numeric_cols = ['log_haversine', 'pickup_cell', 'dropoff_cell']
 
@@ -116,15 +103,18 @@ class FeatureEngineer:
 
         self.df_shape = df.shape
 
-        print('Cleaning has been complited!')
-        print(f"Size before cleaning: {self.original_shape}\nSize after cleaning: {self.df_shape}")
+        
         self.df = df
 
     def fit_transform(self):
         self.feature_engineering()
+        logger.debug("Feature engineering completed")
         self.clean_data()
-        print(f'In dataframe was added columns: {self.added_columns}')
-        print(f'From dataframe was removed columns: {self.removed_columns}')
+        logger.debug("Data cleaning completed")
+        logger.debug(f"Size before cleaning: {self.original_shape}")
+        logger.debug(f"Size after cleaning: {self.df_shape}")
+        logger.debug(f"Added columns: {self.added_columns}")
+        logger.debug(f"Removed columns: {self.removed_columns}")
         return self.df
 
         

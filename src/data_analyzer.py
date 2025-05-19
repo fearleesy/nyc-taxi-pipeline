@@ -10,14 +10,14 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from haversine import haversine, Unit
 import folium
 import os
+import datetime
+from utils.logger import get_logger
 
-if not os.path.exists("stats"):
-    os.mkdir("stats")
-data_quality_path = "stats/DataAnalisis.txt"
+logger = get_logger(__name__)
+
 data_quality_report_path = "stats/data_quality_report.json"
-img_before_cleaning_path = "stats/plots_before_cleaning"
-img_after_cleaning_path = "stats/plots_after_cleaning"
-stat_path = 'stats/statistics'
+imgs_before_cleaning_path = "stats/plots_before_cleaning"
+imgs_after_cleaning_path = "stats/plots_after_cleaning"
 
 
 class DataAnalyzer:
@@ -120,9 +120,24 @@ class DataAnalyzer:
             'quality_metrics': self.metrics,
             'cleaning_report': getattr(self, 'cleaning_report', None)
         }
-    
-        with open(file_path, 'w') as f:
-            json.dump(report, f, indent=2, default=convert)
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        report["timestamp"] = timestamp
+
+        if os.path.exists(file_path):
+            with open(file_path, 'r', encoding='utf-8') as f:
+                try:
+                    existing_data = json.load(f)
+                    if not isinstance(existing_data, list):
+                        existing_data = [existing_data]
+                except json.JSONDecodeError:
+                    existing_data = []
+        else:
+            existing_data = []
+
+        existing_data.append(report)
+
+        with open(file_path, 'w', encoding='utf-8') as f:
+            json.dump(existing_data, f, indent=2, ensure_ascii=False, default=convert)
     
     def get_quality_summary(self):
         summary = []
@@ -169,26 +184,9 @@ class DataAnalyzer:
         
         self.historical_stats = stats
         return stats
-    
-    def save_stats(self):
-        def convert(obj):
-            if isinstance(obj, np.integer):
-                return int(obj)
-            elif isinstance(obj, np.floating):
-                return float(obj)
-            elif isinstance(obj, np.ndarray):
-                return obj.tolist()
-            elif isinstance(obj, pd.Timestamp):
-                return obj.isoformat()
-            raise TypeError(f"Object is not writable in JSON")
-        stats = self._calculate_basic_stats()
-        with open(stat_path, 'w') as f:
-            json.dump(stats, f, indent=2, default=convert)
-
-        return stats
 
     
-    def make_plot(self, df, filename):
+    def make_plot(self, df, imgs_folder_path):
         def calculate_haversine(row):
             start_point = (row['pickup_latitude'], row['pickup_longitude'])
             end_point = (row['dropoff_latitude'], row['dropoff_longitude'])
@@ -244,29 +242,39 @@ class DataAnalyzer:
         axes[2, 1].set_title('passenger_count vs. trip_duration')
 
         plt.tight_layout()
-        plt.savefig(filename, dpi=300, bbox_inches='tight')
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"image_{timestamp}.png"
+        image_path = os.path.join(imgs_folder_path, filename)
+        plt.savefig(image_path, dpi=300, bbox_inches='tight')
 
         df = df.drop(columns=['log_haversine', 'day_of_week', 'month', 'hour'], )
+
+        return image_path
 
 
     def fit_transform(self):
         self.calculate_all_metrics()
-        self.make_plot(self.df, img_before_cleaning_path)
+        logger.debug("All metrics calculated")
+        image_path = self.make_plot(self.df, imgs_before_cleaning_path)
+        logger.debug(f"Saved plot before cleaning to: {image_path}")
         
-        with open(data_quality_path, "w", encoding="utf-8") as file:
-            file.write("Качество данных до очистки:")
-            metric_df, nan_count = self.get_quality_summary()
-            file.write(f"\n{metric_df}")
-            file.write(f"\nКоличество NaN: {nan_count}")
+        metric_df, nan_count = self.get_quality_summary()
+        logger.debug("Data quality before cleaning:")
+        logger.debug(f"\n{metric_df}")
+        logger.debug(f"Number of NaN values: {nan_count}")
+    
+        cleaned_df = self.clean_data()
+        logger.debug("Data cleaned")
 
-        
-            cleaned_df = self.clean_data()
-            self.save_quality_report(data_quality_report_path)
-            self.make_plot(cleaned_df, img_after_cleaning_path)
-        
-            file.write("\n\nОтчет об очистке:")
-            file.write(f"\nИсходный размер: {self.cleaning_report['original_shape']}")
-            file.write(f"\nОчищенный размер: {self.cleaning_report['cleaned_shape']}")
+        self.save_quality_report(data_quality_report_path)
+        logger.debug(f"Saved data quality report to: {data_quality_report_path}")
+
+        image_path = self.make_plot(cleaned_df, imgs_after_cleaning_path)
+        logger.debug(f"Saved plot after cleaning to: {image_path}")
+    
+        logger.debug("Cleaning summary:")
+        logger.debug(f"Original shape: {self.cleaning_report['original_shape']}")
+        logger.debug(f"Cleaned shape: {self.cleaning_report['cleaned_shape']}")
 
         self.cleaned_df = cleaned_df
 
