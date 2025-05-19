@@ -1,4 +1,4 @@
-name: ML CI/CD Pipeline
+name: Auto-update CI/CD Pipeline
 
 on:
   push:
@@ -19,11 +19,24 @@ jobs:
           run: |
             python -m pip install --upgrade pip
             pip install -r requirements.txt
+
+        - name: Download previous model
+          uses: actions/download-artifact@v3
+          with:
+            name: RF_model
+            path: model_storage/
+      
         - name: Run Update
           env:
             PYTHONPATH: ${{ github.workspace }}
           run: |
-            python train --model RF -w 1 --db work.db -s 100 -e 200
+            python main.py train --model RF -w 1 --db work.db -s 100 -e 200
+        - name: Upload new model
+          uses: actions/upload-artifact@v3
+          with:
+            name: RF_model
+            path: model_storage/RF_model.pth
+          
         - name: Upload logs
           uses: actions/upload-artifact@v4
           with:
