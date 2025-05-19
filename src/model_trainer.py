@@ -11,6 +11,7 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 import pandas as pd
 import numpy as np
 from sklearn.metrics import mean_absolute_error, mean_squared_error
+import matplotlib as plt
 
 
 class TaxiModel:
@@ -49,6 +50,17 @@ class TaxiModel:
     # def train(self, X: pd.DataFrame, y: pd.Series, is_warm_start: bool):
 
     #     self.pipeline.fit(X, y)
+    def plot_coefficients_log_reg(model, feature_names):
+        coefs = model.named_steps['model'].coef_[0]
+        features = feature_names
+        plt.figure(figsize=(10, 6))
+        plt.barh(features, coefs)
+        plt.title("Коэффициенты логистической регрессии")
+        plt.xlabel("Значение коэффициента")
+        plt.ylabel("Признак")
+        plt.grid(True, axis='x')
+        plt.show()
+
     
     def predict(self, X: pd.DataFrame, y: pd.Series, metric: str) -> pd.Series:
         y_pred = self.pipeline.predict(X)
@@ -105,7 +117,21 @@ class TaxiModel:
             }
         }
         if model_name == "LR":
+            # for prep_name, preprocessor in self.preprocessor_options.items():
+            self.pipeline = Pipeline([
+                ('preprocessor', self.preprocessor_options['option1']),
+                ('model', self.models[model_name])
+            ])
             self.pipeline.fit(X_train, y_train)
+                # results.append({
+                #     'Model': model_name,
+                #     'Preprocessor': prep_name,
+                #     'Best Score': grid_search.best_score_,
+                #     'Best Params': grid_search.best_params_
+                # })
+            # cat_features = self.pipeline.named_steps['prep'].named_transformers_['cat'].get_feature_names_out(['Pclass', 'Sex'])
+            # feature_names = np.concatenate([['Age', 'SibSp', 'Parch', 'Fare'], cat_features])
+            # plot_coefficients(lr, feature_names)
         else:
             grid_search = GridSearchCV(estimator=self.pipeline, param_grid=param_grids[model_name], cv=5, scoring='neg_mean_absolute_error', n_jobs=-1)
             if is_warm_start:
