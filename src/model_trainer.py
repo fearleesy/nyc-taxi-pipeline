@@ -110,10 +110,18 @@ class TaxiModel:
 
     
     def train(self, model_name: str, X_train : pd.DataFrame, y_train : pd.Series, is_warm_start: bool):
-        if is_warm_start and model_name == "RF" and os.path.exists('./models/RF_model.pkl'):
+        if is_warm_start and model_name == "RF" and os.path.exists('./models/'):
+            list_dist = os.listdir('./models/')
+            list_dist = sorted(list_dist)
+            name = None
+            for i in list_dist:
+                if i[:2] == "RF":
+                    name = i
+                    break
             try:
-                old_model = joblib.load("./models/RF_model.pkl")
-                old_n_estimators = old_model.n_estimators
+                old_model = joblib.load(f"./models/{name}")
+                # old_n_estimators = old_model.n_estimators
+                old_n_estimators = old_model.named_steps['model'].n_estimators
                 print(f"Текущая модель загружена. n_estimators = {old_n_estimators}")
             except FileNotFoundError:
                 raise Exception("Файл модели не найден!")
@@ -175,18 +183,19 @@ class TaxiModel:
             ])
                 grid_search = GridSearchCV(estimator=self.pipeline, param_grid=param_grids[model_name], cv=5, scoring='neg_mean_absolute_error', n_jobs=-1)
                 if is_warm_start:
-                    best_n_estimators = grid_search.best_params_['n_estimators']
+                    grid_search.fit(X_train, y_train)
+                    best_n_estimators = grid_search.best_params_['model__n_estimators']
                     best_model = grid_search.best_estimator_
                     if best_n_estimators > old_n_estimators:
                         print(f"\nДообучение модели: добавляем {best_n_estimators - old_n_estimators} деревьев")
                         best_model.n_estimators = best_n_estimators
                         best_model.fit(X_train, y_train)
                         eval_result = self.evaluate_cv(X_train, y_train, 'MAE', cv=5)
-                        results.append({
-                            'preprocessor': prep_name,
-                            'evaluation': eval_result,
-                            'best_params': grid_search.best_params_
-                        })
+                        # results.append({
+                        #     'preprocessor': prep_name,
+                        #     'evaluation': eval_result,
+                        #     'best_params': grid_search.best_params_
+                        # })
                         '''print(f"Оценка кросс-валидации: {results[-1]['mean_score']:.3f}")
                         print(f"Значения по фолдам: {results[-1]['all_scores']:3f}")'''
                     else:
