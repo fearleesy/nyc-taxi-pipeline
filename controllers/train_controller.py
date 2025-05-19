@@ -2,18 +2,21 @@ import os
 import sys
 import time
 import tracemalloc
+import json
 from typing import Optional
 
-from src.db_manager import DBManager
-from src.data_analyzer import DataAnalyzer
-from src.model_trainer import TaxiModel
-from src.preprocessing_pipeline import FeatureEngineer
+from models.src.db_manager import DBManager
+from models.src.data_analyzer import DataAnalyzer
+from models.src.model_trainer import TaxiModel
+from models.src.preprocessing_pipeline import FeatureEngineer
 from utils.model_helpers import quick_dataset_summary, auto_select_model
 from utils.logger import get_logger
 
 logger = get_logger(__name__)
+with open('views/params.json', 'r') as f:
+    config = json.load(f)
 
-LATEST_MODEL_PATH = "model_storage/latest_model.pkl"
+models_storage_path = config["paths"]["models_storage_path"]
 
 def train_model(
     model_type: Optional[str],
@@ -83,10 +86,6 @@ def train_model(
     model = TaxiModel(model_type)
     logger.debug(f"Created TaxiModel instance with model_type={model_type}")
 
-    # if model.pipeline == 0:
-    #     logger.debug(f"Unsupported model type: {model_type}")
-    #     sys.exit(f"[train] Unsupported model type: {model_type}")
-
     start = time.perf_counter()
     model.train(model_type, X, y, warm_start)
     elapsed_train = time.perf_counter() - start
@@ -96,10 +95,11 @@ def train_model(
     tracemalloc.stop()
     logger.debug(f"Memory usage: Current = {current / 1024 / 1024:.2f} MB, Peak = {peak / 1024 / 1024:.2f} MB")
 
-    model.save(LATEST_MODEL_PATH)
-    model.save(f"model_storage/{model_type}_model.pkl")
+    latest_model_path = os.path.join(models_storage_path, "latest_model.pkl")
+    model.save(latest_model_path)
+    model.save(os.path.join(models_storage_path, f"{model_type}_model.pkl"))
 
     logger.info(
-        f"Trained {model_type} on {len(clean_df)} rows → saved to "
-        f"{LATEST_MODEL_PATH} & model_storage/{model_type}_model.pkl."
+        f"[train] Trained {model_type} on {len(clean_df)} rows → saved to "
+        f"{latest_model_path} & {models_storage_path}/{model_type}_model.pkl."
     )

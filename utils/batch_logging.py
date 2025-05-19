@@ -1,7 +1,5 @@
 from datetime import datetime
 from typing import Optional
-import json
-
 
 def compute_batch_meta(
     file_path: str,
@@ -25,8 +23,3 @@ def compute_batch_meta(
         "elapsed_time_sec": elapsed_time_sec,
         "num_duplicates": int(num_duplicates),
     }
-
-def append_log_entry(meta: dict, log_path: str = "stats/data_batch_log.jsonl") -> None:
-    with open(log_path, "a", encoding="utf-8") as f:
-        json.dump(meta, f, indent=2)
-        f.write("\n---\n")

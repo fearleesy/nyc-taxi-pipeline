@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-def get_logger(name: str, log_file: str = "stats/pipeline.log", level: int = logging.DEBUG) -> logging.Logger:
+def get_logger(name: str, log_file: str = "views/pipeline.log", level: int = logging.DEBUG) -> logging.Logger:
     Path(log_file).parent.mkdir(parents=True, exist_ok=True)
 
     logger = logging.getLogger(name)

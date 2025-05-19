@@ -1,17 +1,22 @@
 import os
 import sys
 import time
+import json
 import tracemalloc
 
-from src.data_analyzer import DataAnalyzer
-from src.model_trainer import TaxiModel
-from src.preprocessing_pipeline import FeatureEngineer
+from models.src.data_analyzer import DataAnalyzer
+from models.src.model_trainer import TaxiModel
+from models.src.preprocessing_pipeline import FeatureEngineer
 from utils.io_helpers import load_data
 from utils.logger import get_logger
 
 logger = get_logger(__name__)
+with open('views/params.json', 'r') as f:
+    config = json.load(f)
 
-LATEST_MODEL_PATH = "model_storage/latest_model.pkl"
+models_storage_path = config["paths"]["models_storage_path"]
+
+LATEST_MODEL_PATH = "models/latest_model.pkl"
 
 def test_model(
     model_name: str,
@@ -40,7 +45,7 @@ def test_model(
         logger.debug(f"Test data not found: {file_path}")
         sys.exit(f"[test] Test data not found: {file_path}")
 
-    model_path = LATEST_MODEL_PATH if model_name == "latest" else f"model_storage/{model_name}_model.pkl"
+    model_path = os.path.join(models_storage_path, "latest_model.pkl") if model_name == "latest" else f"{models_storage_path}/{model_name}_model.pkl"
     logger.debug(f"Resolved model path: {model_path}")
 
     if not os.path.exists(model_path):
