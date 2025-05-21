@@ -1,0 +1,268 @@
+[
+  {
+    "dataset_shape": [
+      5000,
+      11
+    ],
+    "quality_metrics": {
+      "uniqueness": {
+        "id": {
+          "unique": 2000,
+          "duplicates": 3000,
+          "value": 0.4
+        },
+        "vendor_id": {
+          "unique": 2,
+          "duplicates": 4998,
+          "value": 0.0004
+        },
+        "pickup_datetime": {
+          "unique": 2000,
+          "duplicates": 3000,
+          "value": 0.4
+        },
+        "dropoff_datetime": {
+          "unique": 2000,
+          "duplicates": 3000,
+          "value": 0.4
+        },
+        "passenger_count": {
+          "unique": 6,
+          "duplicates": 4994,
+          "value": 0.0012
+        },
+        "pickup_longitude": {
+          "unique": 1762,
+          "duplicates": 3238,
+          "value": 0.3524
+        },
+        "pickup_latitude": {
+          "unique": 1891,
+          "duplicates": 3109,
+          "value": 0.3782
+        },
+        "dropoff_longitude": {
+          "unique": 1809,
+          "duplicates": 3191,
+          "value": 0.3618
+        },
+        "dropoff_latitude": {
+          "unique": 1913,
+          "duplicates": 3087,
+          "value": 0.3826
+        },
+        "store_and_fwd_flag": {
+          "unique": 2,
+          "duplicates": 4998,
+          "value": 0.0004
+        },
+        "trip_duration": {
+          "unique": 1157,
+          "duplicates": 3843,
+          "value": 0.2314
+        }
+      },
+      "completeness": {
+        "id": {
+          "non_null": 5000,
+          "null": 0,
+          "value": 1.0
+        },
+        "vendor_id": {
+          "non_null": 5000,
+          "null": 0,
+          "value": 1.0
+        },
+        "pickup_datetime": {
+          "non_null": 5000,
+          "null": 0,
+          "value": 1.0
+        },
+        "dropoff_datetime": {
+          "non_null": 5000,
+          "null": 0,
+          "value": 1.0
+        },
+        "passenger_count": {
+          "non_null": 5000,
+          "null": 0,
+          "value": 1.0
+        },
+        "pickup_longitude": {
+          "non_null": 5000,
+          "null": 0,
+          "value": 1.0
+        },
+        "pickup_latitude": {
+          "non_null": 5000,
+          "null": 0,
+          "value": 1.0
+        },
+        "dropoff_longitude": {
+          "non_null": 5000,
+          "null": 0,
+          "value": 1.0
+        },
+        "dropoff_latitude": {
+          "non_null": 5000,
+          "null": 0,
+          "value": 1.0
+        },
+        "store_and_fwd_flag": {
+          "non_null": 5000,
+          "null": 0,
+          "value": 1.0
+        },
+        "trip_duration": {
+          "non_null": 5000,
+          "null": 0,
+          "value": 1.0
+        }
+      }
+    },
+    "cleaning_report": {
+      "original_shape": [
+        5000,
+        11
+      ],
+      "cleaned_shape": [
+        4931,
+        13
+      ]
+    },
+    "timestamp": "2025-05-19 17:47:00"
+  },
+  {
+    "dataset_shape": [
+      531,
+      11
+    ],
+    "quality_metrics": {
+      "completeness": {
+        "id": {
+          "non_null": 531,
+          "null": 0,
+          "value": 1.0
+        },
+        "vendor_id": {
+          "non_null": 531,
+          "null": 0,
+          "value": 1.0
+        },
+        "pickup_datetime": {
+          "non_null": 531,
+          "null": 0,
+          "value": 1.0
+        },
+        "dropoff_datetime": {
+          "non_null": 531,
+          "null": 0,
+          "value": 1.0
+        },
+        "passenger_count": {
+          "non_null": 531,
+          "null": 0,
+          "value": 1.0
+        },
+        "pickup_longitude": {
+          "non_null": 531,
+          "null": 0,
+          "value": 1.0
+        },
+        "pickup_latitude": {
+          "non_null": 531,
+          "null": 0,
+          "value": 1.0
+        },
+        "dropoff_longitude": {
+          "non_null": 531,
+          "null": 0,
+          "value": 1.0
+        },
+        "dropoff_latitude": {
+          "non_null": 531,
+          "null": 0,
+          "value": 1.0
+        },
+        "store_and_fwd_flag": {
+          "non_null": 531,
+          "null": 0,
+          "value": 1.0
+        },
+        "trip_duration": {
+          "non_null": 531,
+          "null": 0,
+          "value": 1.0
+        }
+      },
+      "uniqueness": {
+        "id": {
+          "unique": 531,
+          "duplicates": 0,
+          "value": 1.0
+        },
+        "vendor_id": {
+          "unique": 2,
+          "duplicates": 529,
+          "value": 0.0038
+        },
+        "pickup_datetime": {
+          "unique": 531,
+          "duplicates": 0,
+          "value": 1.0
+        },
+        "dropoff_datetime": {
+          "unique": 531,
+          "duplicates": 0,
+          "value": 1.0
+        },
+        "passenger_count": {
+          "unique": 6,
+          "duplicates": 525,
+          "value": 0.0113
+        },
+        "pickup_longitude": {
+          "unique": 509,
+          "duplicates": 22,
+          "value": 0.9586
+        },
+        "pickup_latitude": {
+          "unique": 527,
+          "duplicates": 4,
+          "value": 0.9925
+        },
+        "dropoff_longitude": {
+          "unique": 512,
+          "duplicates": 19,
+          "value": 0.9642
+        },
+        "dropoff_latitude": {
+          "unique": 526,
+          "duplicates": 5,
+          "value": 0.9906
+        },
+        "store_and_fwd_flag": {
+          "unique": 2,
+          "duplicates": 529,
+          "value": 0.0038
+        },
+        "trip_duration": {
+          "unique": 449,
+          "duplicates": 82,
+          "value": 0.8456
+        }
+      }
+    },
+    "cleaning_report": {
+      "original_shape": [
+        531,
+        11
+      ],
+      "cleaned_shape": [
+        522,
+        13
+      ]
+    },
+    "timestamp": "2025-05-19 17:47:16"
+  }
+]

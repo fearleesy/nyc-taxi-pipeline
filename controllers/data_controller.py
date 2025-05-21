@@ -1,23 +1,28 @@
 import os
 import sys
 import time
+import json
 from typing import Optional
 
-from src.db_manager import DBManager
-from src.data_analyzer import DataAnalyzer
+from models.src.db_manager import DBManager
+from models.src.data_analyzer import DataAnalyzer
 from utils.io_helpers import load_data
-from utils.batch_logging import compute_batch_meta, append_log_entry
+from utils.batch_logging import compute_batch_meta
 from utils.logger import get_logger
 
 logger = get_logger(__name__)
 
+with open('views/params.json', 'r') as f:
+    config = json.load(f)
+
+base_data_type = config["data_parameters"]["base_data_type"]
 
 def add_data(
     file_path: str,
     db_path: str = "work.db",
     start: int = 0,
     end: Optional[int] = None,
-    source_type: str = "csv"
+    source_type: str = base_data_type
 ) -> None:
     """
     Load data from file and append a slice of it into the SQLite database.
@@ -80,9 +85,6 @@ def add_data(
         num_duplicates=sliced_df.duplicated().sum()
     )
     logger.debug(f"Metadata: {meta}")
-    append_log_entry(meta)
-    logger.debug("Batch log updated.")
-
 
     logger.info(
         f"[add_data] Inserted {len(sliced_df)} rows into {db_path}. "

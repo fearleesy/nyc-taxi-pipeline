@@ -1,0 +1,279 @@
+
+==================================================
+Model: Lasso (Version: 20250519_174030)
+File: Lasso_20250519_174030.pkl
+Saved at: 2025-05-19 17:40:30.028174
+
+Metrics:
+  model__alpha: 0.002154434690031882
+  model__max_iter: 1000
+
+Results:
+Preprocessor: option1
+Best params: {'model__alpha': 0.002154434690031882, 'model__max_iter': 1000}
+Top results:
+  {'params': {'model__alpha': 0.002154434690031882, 'model__max_iter': 1000}, 'mean_test_score': -0.5247202801493314, 'std_test_score': 0.010019207485845522, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.002154434690031882, 'model__max_iter': 2000}, 'mean_test_score': -0.5247202801493314, 'std_test_score': 0.010019207485845522, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.002154434690031882, 'model__max_iter': 3000}, 'mean_test_score': -0.5247202801493314, 'std_test_score': 0.010019207485845522, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.002154434690031882, 'model__max_iter': 4000}, 'mean_test_score': -0.5247202801493314, 'std_test_score': 0.010019207485845522, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.002154434690031882, 'model__max_iter': 5000}, 'mean_test_score': -0.5247202801493314, 'std_test_score': 0.010019207485845522, 'rank_test_score': 1}
+
+
+Features:
+  
+
+==================================================
+Model: Lasso (Version: 20250519_174035)
+File: Lasso_20250519_174035.pkl
+Saved at: 2025-05-19 17:40:35.875339
+
+Metrics:
+  model__alpha: 0.004641588833612777
+  model__max_iter: 1000
+
+Results:
+Preprocessor: option1
+Best params: {'model__alpha': 0.002154434690031882, 'model__max_iter': 1000}
+Top results:
+  {'params': {'model__alpha': 0.002154434690031882, 'model__max_iter': 1000}, 'mean_test_score': -0.5247202801493314, 'std_test_score': 0.010019207485845522, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.002154434690031882, 'model__max_iter': 2000}, 'mean_test_score': -0.5247202801493314, 'std_test_score': 0.010019207485845522, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.002154434690031882, 'model__max_iter': 3000}, 'mean_test_score': -0.5247202801493314, 'std_test_score': 0.010019207485845522, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.002154434690031882, 'model__max_iter': 4000}, 'mean_test_score': -0.5247202801493314, 'std_test_score': 0.010019207485845522, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.002154434690031882, 'model__max_iter': 5000}, 'mean_test_score': -0.5247202801493314, 'std_test_score': 0.010019207485845522, 'rank_test_score': 1}
+Preprocessor: option2
+Best params: {'model__alpha': 0.004641588833612777, 'model__max_iter': 1000}
+Top results:
+  {'params': {'model__alpha': 0.004641588833612777, 'model__max_iter': 1000}, 'mean_test_score': -0.5248370404790086, 'std_test_score': 0.010232762029432069, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.004641588833612777, 'model__max_iter': 2000}, 'mean_test_score': -0.5248370404790086, 'std_test_score': 0.010232762029432069, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.004641588833612777, 'model__max_iter': 3000}, 'mean_test_score': -0.5248370404790086, 'std_test_score': 0.010232762029432069, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.004641588833612777, 'model__max_iter': 4000}, 'mean_test_score': -0.5248370404790086, 'std_test_score': 0.010232762029432069, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.004641588833612777, 'model__max_iter': 5000}, 'mean_test_score': -0.5248370404790086, 'std_test_score': 0.010232762029432069, 'rank_test_score': 1}
+
+
+Features:
+  
+
+==================================================
+Model: Lasso (Version: 20250519_174042)
+File: Lasso_20250519_174042.pkl
+Saved at: 2025-05-19 17:40:42.904700
+
+Metrics:
+  model__alpha: 0.0001
+  model__max_iter: 1000
+
+Results:
+Preprocessor: option1
+Best params: {'model__alpha': 0.002154434690031882, 'model__max_iter': 1000}
+Top results:
+  {'params': {'model__alpha': 0.002154434690031882, 'model__max_iter': 1000}, 'mean_test_score': -0.5247202801493314, 'std_test_score': 0.010019207485845522, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.002154434690031882, 'model__max_iter': 2000}, 'mean_test_score': -0.5247202801493314, 'std_test_score': 0.010019207485845522, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.002154434690031882, 'model__max_iter': 3000}, 'mean_test_score': -0.5247202801493314, 'std_test_score': 0.010019207485845522, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.002154434690031882, 'model__max_iter': 4000}, 'mean_test_score': -0.5247202801493314, 'std_test_score': 0.010019207485845522, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.002154434690031882, 'model__max_iter': 5000}, 'mean_test_score': -0.5247202801493314, 'std_test_score': 0.010019207485845522, 'rank_test_score': 1}
+Preprocessor: option2
+Best params: {'model__alpha': 0.004641588833612777, 'model__max_iter': 1000}
+Top results:
+  {'params': {'model__alpha': 0.004641588833612777, 'model__max_iter': 1000}, 'mean_test_score': -0.5248370404790086, 'std_test_score': 0.010232762029432069, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.004641588833612777, 'model__max_iter': 2000}, 'mean_test_score': -0.5248370404790086, 'std_test_score': 0.010232762029432069, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.004641588833612777, 'model__max_iter': 3000}, 'mean_test_score': -0.5248370404790086, 'std_test_score': 0.010232762029432069, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.004641588833612777, 'model__max_iter': 4000}, 'mean_test_score': -0.5248370404790086, 'std_test_score': 0.010232762029432069, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.004641588833612777, 'model__max_iter': 5000}, 'mean_test_score': -0.5248370404790086, 'std_test_score': 0.010232762029432069, 'rank_test_score': 1}
+Preprocessor: option3
+Best params: {'model__alpha': 0.0001, 'model__max_iter': 1000}
+Top results:
+  {'params': {'model__alpha': 0.0001, 'model__max_iter': 1000}, 'mean_test_score': -0.5248725755540687, 'std_test_score': 0.009744941131424578, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.0001, 'model__max_iter': 2000}, 'mean_test_score': -0.5248725755540687, 'std_test_score': 0.009744941131424578, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.0001, 'model__max_iter': 3000}, 'mean_test_score': -0.5248725755540687, 'std_test_score': 0.009744941131424578, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.0001, 'model__max_iter': 4000}, 'mean_test_score': -0.5248725755540687, 'std_test_score': 0.009744941131424578, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.0001, 'model__max_iter': 5000}, 'mean_test_score': -0.5248725755540687, 'std_test_score': 0.009744941131424578, 'rank_test_score': 1}
+
+
+Features:
+  
+
+==================================================
+Model: Ridge (Version: 20250519_174323)
+File: Ridge_20250519_174323.pkl
+Saved at: 2025-05-19 17:43:23.813371
+
+Metrics:
+  model__alpha: 100.0
+  model__solver: auto
+
+Results:
+Preprocessor: option1
+Best params: {'model__alpha': 100.0, 'model__solver': 'auto'}
+Top results:
+  {'params': {'model__alpha': 100.0, 'model__solver': 'auto'}, 'mean_test_score': -0.5235367594925376, 'std_test_score': 0.0126244802055884, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'cholesky'}, 'mean_test_score': -0.5235367594925376, 'std_test_score': 0.0126244802055884, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'svd'}, 'mean_test_score': -0.5235367594925379, 'std_test_score': 0.012624480205588363, 'rank_test_score': 3}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'lsqr'}, 'mean_test_score': -0.5235471057133713, 'std_test_score': 0.01262159108327956, 'rank_test_score': 4}
+  {'params': {'model__alpha': 1.0, 'model__solver': 'auto'}, 'mean_test_score': -0.5237635755024208, 'std_test_score': 0.012952412358440213, 'rank_test_score': 5}
+
+
+Features:
+  
+
+==================================================
+Model: Ridge (Version: 20250519_174324)
+File: Ridge_20250519_174324.pkl
+Saved at: 2025-05-19 17:43:24.704428
+
+Metrics:
+  model__alpha: 100.0
+  model__solver: auto
+
+Results:
+Preprocessor: option1
+Best params: {'model__alpha': 100.0, 'model__solver': 'auto'}
+Top results:
+  {'params': {'model__alpha': 100.0, 'model__solver': 'auto'}, 'mean_test_score': -0.5235367594925376, 'std_test_score': 0.0126244802055884, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'cholesky'}, 'mean_test_score': -0.5235367594925376, 'std_test_score': 0.0126244802055884, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'svd'}, 'mean_test_score': -0.5235367594925379, 'std_test_score': 0.012624480205588363, 'rank_test_score': 3}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'lsqr'}, 'mean_test_score': -0.5235471057133713, 'std_test_score': 0.01262159108327956, 'rank_test_score': 4}
+  {'params': {'model__alpha': 1.0, 'model__solver': 'auto'}, 'mean_test_score': -0.5237635755024208, 'std_test_score': 0.012952412358440213, 'rank_test_score': 5}
+Preprocessor: option2
+Best params: {'model__alpha': 100.0, 'model__solver': 'auto'}
+Top results:
+  {'params': {'model__alpha': 100.0, 'model__solver': 'auto'}, 'mean_test_score': -0.523439582221604, 'std_test_score': 0.012540539289913982, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'cholesky'}, 'mean_test_score': -0.523439582221604, 'std_test_score': 0.012540539289913982, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'svd'}, 'mean_test_score': -0.5234395822216041, 'std_test_score': 0.012540539289914008, 'rank_test_score': 3}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'lsqr'}, 'mean_test_score': -0.5234412948292193, 'std_test_score': 0.012540437209012144, 'rank_test_score': 4}
+  {'params': {'model__alpha': 1.0, 'model__solver': 'lsqr'}, 'mean_test_score': -0.523754794896061, 'std_test_score': 0.012945642524735282, 'rank_test_score': 5}
+
+
+Features:
+  
+
+==================================================
+Model: Ridge (Version: 20250519_174325)
+File: Ridge_20250519_174325.pkl
+Saved at: 2025-05-19 17:43:25.701098
+
+Metrics:
+  model__alpha: 0.0001
+  model__solver: lsqr
+
+Results:
+Preprocessor: option1
+Best params: {'model__alpha': 100.0, 'model__solver': 'auto'}
+Top results:
+  {'params': {'model__alpha': 100.0, 'model__solver': 'auto'}, 'mean_test_score': -0.5235367594925376, 'std_test_score': 0.0126244802055884, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'cholesky'}, 'mean_test_score': -0.5235367594925376, 'std_test_score': 0.0126244802055884, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'svd'}, 'mean_test_score': -0.5235367594925379, 'std_test_score': 0.012624480205588363, 'rank_test_score': 3}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'lsqr'}, 'mean_test_score': -0.5235471057133713, 'std_test_score': 0.01262159108327956, 'rank_test_score': 4}
+  {'params': {'model__alpha': 1.0, 'model__solver': 'auto'}, 'mean_test_score': -0.5237635755024208, 'std_test_score': 0.012952412358440213, 'rank_test_score': 5}
+Preprocessor: option2
+Best params: {'model__alpha': 100.0, 'model__solver': 'auto'}
+Top results:
+  {'params': {'model__alpha': 100.0, 'model__solver': 'auto'}, 'mean_test_score': -0.523439582221604, 'std_test_score': 0.012540539289913982, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'cholesky'}, 'mean_test_score': -0.523439582221604, 'std_test_score': 0.012540539289913982, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'svd'}, 'mean_test_score': -0.5234395822216041, 'std_test_score': 0.012540539289914008, 'rank_test_score': 3}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'lsqr'}, 'mean_test_score': -0.5234412948292193, 'std_test_score': 0.012540437209012144, 'rank_test_score': 4}
+  {'params': {'model__alpha': 1.0, 'model__solver': 'lsqr'}, 'mean_test_score': -0.523754794896061, 'std_test_score': 0.012945642524735282, 'rank_test_score': 5}
+Preprocessor: option3
+Best params: {'model__alpha': 0.0001, 'model__solver': 'lsqr'}
+Top results:
+  {'params': {'model__alpha': 0.0001, 'model__solver': 'lsqr'}, 'mean_test_score': -0.5237714292257171, 'std_test_score': 0.012958851845124747, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.01, 'model__solver': 'lsqr'}, 'mean_test_score': -0.5237716414569276, 'std_test_score': 0.01295784239055151, 'rank_test_score': 2}
+  {'params': {'model__alpha': 0.0001, 'model__solver': 'auto'}, 'mean_test_score': -0.5237771423555003, 'std_test_score': 0.012960426541106343, 'rank_test_score': 3}
+  {'params': {'model__alpha': 0.0001, 'model__solver': 'cholesky'}, 'mean_test_score': -0.5237771423555003, 'std_test_score': 0.012960426541106343, 'rank_test_score': 3}
+  {'params': {'model__alpha': 0.0001, 'model__solver': 'svd'}, 'mean_test_score': -0.5237771423555004, 'std_test_score': 0.012960426541106355, 'rank_test_score': 5}
+
+
+Features:
+  
+
+==================================================
+Model: Ridge (Version: 20250519_174618)
+File: Ridge_20250519_174618.pkl
+Saved at: 2025-05-19 17:46:18.747006
+
+Metrics:
+  model__alpha: 100.0
+  model__solver: auto
+
+Results:
+Preprocessor: option1
+Best params: {'model__alpha': 100.0, 'model__solver': 'auto'}
+Top results:
+  {'params': {'model__alpha': 100.0, 'model__solver': 'auto'}, 'mean_test_score': -0.5247730333427805, 'std_test_score': 0.00665992713688525, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'svd'}, 'mean_test_score': -0.5247730333427805, 'std_test_score': 0.006659927136885271, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'cholesky'}, 'mean_test_score': -0.5247730333427805, 'std_test_score': 0.00665992713688525, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'lsqr'}, 'mean_test_score': -0.5247793412722699, 'std_test_score': 0.006657851236079883, 'rank_test_score': 4}
+  {'params': {'model__alpha': 1.0, 'model__solver': 'auto'}, 'mean_test_score': -0.5250094290497944, 'std_test_score': 0.00662410826106991, 'rank_test_score': 5}
+
+
+Features:
+  
+
+==================================================
+Model: Ridge (Version: 20250519_174619)
+File: Ridge_20250519_174619.pkl
+Saved at: 2025-05-19 17:46:19.813124
+
+Metrics:
+  model__alpha: 100.0
+  model__solver: lsqr
+
+Results:
+Preprocessor: option1
+Best params: {'model__alpha': 100.0, 'model__solver': 'auto'}
+Top results:
+  {'params': {'model__alpha': 100.0, 'model__solver': 'auto'}, 'mean_test_score': -0.5247730333427805, 'std_test_score': 0.00665992713688525, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'svd'}, 'mean_test_score': -0.5247730333427805, 'std_test_score': 0.006659927136885271, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'cholesky'}, 'mean_test_score': -0.5247730333427805, 'std_test_score': 0.00665992713688525, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'lsqr'}, 'mean_test_score': -0.5247793412722699, 'std_test_score': 0.006657851236079883, 'rank_test_score': 4}
+  {'params': {'model__alpha': 1.0, 'model__solver': 'auto'}, 'mean_test_score': -0.5250094290497944, 'std_test_score': 0.00662410826106991, 'rank_test_score': 5}
+Preprocessor: option2
+Best params: {'model__alpha': 100.0, 'model__solver': 'lsqr'}
+Top results:
+  {'params': {'model__alpha': 100.0, 'model__solver': 'lsqr'}, 'mean_test_score': -0.5246723329827885, 'std_test_score': 0.006954493473422588, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'auto'}, 'mean_test_score': -0.5246734739869264, 'std_test_score': 0.0069556834166090925, 'rank_test_score': 2}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'svd'}, 'mean_test_score': -0.5246734739869264, 'std_test_score': 0.0069556834166090925, 'rank_test_score': 2}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'cholesky'}, 'mean_test_score': -0.5246734739869264, 'std_test_score': 0.0069556834166090925, 'rank_test_score': 2}
+  {'params': {'model__alpha': 1.0, 'model__solver': 'lsqr'}, 'mean_test_score': -0.5250036085125133, 'std_test_score': 0.0066267009181489415, 'rank_test_score': 5}
+
+
+Features:
+  
+
+==================================================
+Model: Ridge (Version: 20250519_174620)
+File: Ridge_20250519_174620.pkl
+Saved at: 2025-05-19 17:46:20.922120
+
+Metrics:
+  model__alpha: 1.0
+  model__solver: lsqr
+
+Results:
+Preprocessor: option1
+Best params: {'model__alpha': 100.0, 'model__solver': 'auto'}
+Top results:
+  {'params': {'model__alpha': 100.0, 'model__solver': 'auto'}, 'mean_test_score': -0.5247730333427805, 'std_test_score': 0.00665992713688525, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'svd'}, 'mean_test_score': -0.5247730333427805, 'std_test_score': 0.006659927136885271, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'cholesky'}, 'mean_test_score': -0.5247730333427805, 'std_test_score': 0.00665992713688525, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'lsqr'}, 'mean_test_score': -0.5247793412722699, 'std_test_score': 0.006657851236079883, 'rank_test_score': 4}
+  {'params': {'model__alpha': 1.0, 'model__solver': 'auto'}, 'mean_test_score': -0.5250094290497944, 'std_test_score': 0.00662410826106991, 'rank_test_score': 5}
+Preprocessor: option2
+Best params: {'model__alpha': 100.0, 'model__solver': 'lsqr'}
+Top results:
+  {'params': {'model__alpha': 100.0, 'model__solver': 'lsqr'}, 'mean_test_score': -0.5246723329827885, 'std_test_score': 0.006954493473422588, 'rank_test_score': 1}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'auto'}, 'mean_test_score': -0.5246734739869264, 'std_test_score': 0.0069556834166090925, 'rank_test_score': 2}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'svd'}, 'mean_test_score': -0.5246734739869264, 'std_test_score': 0.0069556834166090925, 'rank_test_score': 2}
+  {'params': {'model__alpha': 100.0, 'model__solver': 'cholesky'}, 'mean_test_score': -0.5246734739869264, 'std_test_score': 0.0069556834166090925, 'rank_test_score': 2}
+  {'params': {'model__alpha': 1.0, 'model__solver': 'lsqr'}, 'mean_test_score': -0.5250036085125133, 'std_test_score': 0.0066267009181489415, 'rank_test_score': 5}
+Preprocessor: option3
+Best params: {'model__alpha': 1.0, 'model__solver': 'lsqr'}
+Top results:
+  {'params': {'model__alpha': 1.0, 'model__solver': 'lsqr'}, 'mean_test_score': -0.5250151214079128, 'std_test_score': 0.006444665822652826, 'rank_test_score': 1}
+  {'params': {'model__alpha': 0.01, 'model__solver': 'lsqr'}, 'mean_test_score': -0.525018326161495, 'std_test_score': 0.006618527392655835, 'rank_test_score': 2}
+  {'params': {'model__alpha': 1.0, 'model__solver': 'auto'}, 'mean_test_score': -0.525018471611468, 'std_test_score': 0.006446914348069711, 'rank_test_score': 3}
+  {'params': {'model__alpha': 1.0, 'model__solver': 'svd'}, 'mean_test_score': -0.525018471611468, 'std_test_score': 0.006446914348069714, 'rank_test_score': 3}
+  {'params': {'model__alpha': 1.0, 'model__solver': 'cholesky'}, 'mean_test_score': -0.525018471611468, 'std_test_score': 0.006446914348069711, 'rank_test_score': 3}
+
+
+Features:
+  

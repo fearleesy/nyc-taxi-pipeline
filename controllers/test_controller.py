@@ -1,17 +1,22 @@
 import os
 import sys
 import time
+import json
 import tracemalloc
 
-from src.data_analyzer import DataAnalyzer
-from src.model_trainer import TaxiModel
-from src.preprocessing_pipeline import FeatureEngineer
+from models.src.data_analyzer import DataAnalyzer
+from models.src.model_trainer import TaxiModel
+from models.src.preprocessing_pipeline import FeatureEngineer
 from utils.io_helpers import load_data
 from utils.logger import get_logger
 
 logger = get_logger(__name__)
+with open('views/params.json', 'r') as f:
+    config = json.load(f)
 
-LATEST_MODEL_PATH = "model_storage/latest_model.pkl"
+models_storage_path = config["paths"]["models_storage_path"]
+
+LATEST_MODEL_PATH = "models/latest_model.pkl"
 
 def test_model(
     model_name: str,
@@ -40,7 +45,7 @@ def test_model(
         logger.debug(f"Test data not found: {file_path}")
         sys.exit(f"[test] Test data not found: {file_path}")
 
-    model_path = LATEST_MODEL_PATH if model_name == "latest" else f"models/{model_name}_model.pkl"
+    model_path = os.path.join(models_storage_path, "latest_model.pkl") if model_name == "latest" else f"{models_storage_path}/{model_name}_model.pkl"
     logger.debug(f"Resolved model path: {model_path}")
 
     if not os.path.exists(model_path):
@@ -71,12 +76,17 @@ def test_model(
     logger.debug(f"Prepared features X with shape {X.shape} and target y with length {len(y_true)}")
 
     start = time.perf_counter()
-    score = model.predict(X, y_true, metric)
+    score1 = model.predict(X, y_true, "RMSE")
+    score2 = model.predict(X, y_true, "MAE")
     elapsed_predict = time.perf_counter() - start
     logger.debug(f"Model prediction completed in {elapsed_predict:.4f} seconds")
 
     current, peak = tracemalloc.get_traced_memory()
     tracemalloc.stop()
     logger.debug(f"Memory usage: Current = {current / 1024 / 1024:.2f} MB, Peak = {peak / 1024 / 1024:.2f} MB")
-
-    logger.info(f"[test] {metric}: {score:.2f} seconds on {len(y_true)} samples.")
+    if metric == "MAE":
+        logger.info(f"[test] {metric}: {score2:.2f} seconds on {len(y_true)} samples.")
+    else:
+        logger.info(f"[test] {metric}: {score1:.2f} seconds on {len(y_true)} samples.")
+    
+    return score1, score2

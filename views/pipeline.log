@@ -1,0 +1,95 @@
+[2025-05-19 17:46:48] DEBUG in __main__: Executing command: add_data
+[2025-05-19 17:46:48] DEBUG in controllers.data_controller: add_data started with file_path=train.csv, db_path=work.db, slice=[100:700], source_type=csv
+[2025-05-19 17:46:50] DEBUG in controllers.data_controller: Loaded data with 500000 rows from train.csv
+[2025-05-19 17:46:50] DEBUG in controllers.data_controller: Sliced data frame size: 600 rows
+[2025-05-19 17:46:50] DEBUG in controllers.data_controller: Initializing DBManager...
+[2025-05-19 17:46:50] DEBUG in controllers.data_controller: Insert complete.
+[2025-05-19 17:46:50] DEBUG in controllers.data_controller: Total DB size after insertion: 5000 rows.
+[2025-05-19 17:46:50] DEBUG in controllers.data_controller: Time taken for DB insertion: 0.02 seconds.
+[2025-05-19 17:46:50] DEBUG in controllers.data_controller: Computing metadata for batch log...
+[2025-05-19 17:46:50] DEBUG in controllers.data_controller: Metadata: {'timestamp': '2025-05-19T17:46:50', 'file_path': 'train.csv', 'batch_size': 600, 'db_total_size': 5000, 'batch_ratio': 12.0, 'csv_total_size': 500000, 'slice_start': 100, 'slice_end': 700, 'elapsed_time_sec': 0.02, 'num_duplicates': 0}
+[2025-05-19 17:46:50] INFO in controllers.data_controller: [add_data] Inserted 600 rows into work.db. Total length: 5000, time: 0.02s
+[2025-05-19 17:46:56] DEBUG in __main__: Executing command: train
+[2025-05-19 17:46:56] DEBUG in controllers.train_controller: Starting training: model_type=None, warm_start=False, db_path=work.db, start=0, end=None
+[2025-05-19 17:46:56] DEBUG in controllers.train_controller: Fetched 5000 rows from DB slice [0:None]
+[2025-05-19 17:46:56] DEBUG in controllers.train_controller: Dataset summary: {'n_samples': 5000, 'n_features': 11, 'duplicate_rate': 0.6, 'low_unique_cols': 3}
+[2025-05-19 17:46:56] DEBUG in controllers.train_controller: Uniqueness stats: {'id': {'unique': 2000, 'duplicates': 3000, 'value': 0.4}, 'vendor_id': {'unique': 2, 'duplicates': 4998, 'value': 0.0004}, 'pickup_datetime': {'unique': 2000, 'duplicates': 3000, 'value': 0.4}, 'dropoff_datetime': {'unique': 2000, 'duplicates': 3000, 'value': 0.4}, 'passenger_count': {'unique': 6, 'duplicates': 4994, 'value': 0.0012}, 'pickup_longitude': {'unique': 1762, 'duplicates': 3238, 'value': 0.3524}, 'pickup_latitude': {'unique': 1891, 'duplicates': 3109, 'value': 0.3782}, 'dropoff_longitude': {'unique': 1809, 'duplicates': 3191, 'value': 0.3618}, 'dropoff_latitude': {'unique': 1913, 'duplicates': 3087, 'value': 0.3826}, 'store_and_fwd_flag': {'unique': 2, 'duplicates': 4998, 'value': 0.0004}, 'trip_duration': {'unique': 1157, 'duplicates': 3843, 'value': 0.2314}}
+[2025-05-19 17:46:56] DEBUG in controllers.train_controller: Auto-selected model type: LR
+[2025-05-19 17:46:56] DEBUG in models.src.data_analyzer: All metrics calculated
+[2025-05-19 17:46:59] DEBUG in models.src.data_analyzer: Saved plot before cleaning to: views/plots_before_cleaning/image_20250519_174657.png
+[2025-05-19 17:46:59] DEBUG in models.src.data_analyzer: Data quality before cleaning:
+[2025-05-19 17:46:59] DEBUG in models.src.data_analyzer: 
+                column  NaNs  completeness  uniqueness
+0     dropoff_datetime     0           1.0      0.4000
+1     dropoff_latitude     0           1.0      0.3826
+2    dropoff_longitude     0           1.0      0.3618
+3                   id     0           1.0      0.4000
+4      passenger_count     0           1.0      0.0012
+5      pickup_datetime     0           1.0      0.4000
+6      pickup_latitude     0           1.0      0.3782
+7     pickup_longitude     0           1.0      0.3524
+8   store_and_fwd_flag     0           1.0      0.0004
+9        trip_duration     0           1.0      0.2314
+10           vendor_id     0           1.0      0.0004
+[2025-05-19 17:46:59] DEBUG in models.src.data_analyzer: Number of NaN values: 0
+[2025-05-19 17:47:00] DEBUG in models.src.data_analyzer: Data cleaned
+[2025-05-19 17:47:00] DEBUG in models.src.data_analyzer: Saved data quality report to: views/data_quality_report.json
+[2025-05-19 17:47:03] DEBUG in models.src.data_analyzer: Saved plot after cleaning to: views/plots_after_cleaning/image_20250519_174701.png
+[2025-05-19 17:47:03] DEBUG in models.src.data_analyzer: Cleaning summary:
+[2025-05-19 17:47:03] DEBUG in models.src.data_analyzer: Original shape: (5000, 11)
+[2025-05-19 17:47:03] DEBUG in models.src.data_analyzer: Cleaned shape: (4931, 13)
+[2025-05-19 17:47:03] DEBUG in controllers.train_controller: DataAnalyzer.fit_transform completed in 6.8862 seconds with 4931 output rows
+[2025-05-19 17:47:03] DEBUG in models.src.preprocessing_pipeline: Feature engineering completed
+[2025-05-19 17:47:03] DEBUG in models.src.preprocessing_pipeline: Data cleaning completed
+[2025-05-19 17:47:03] DEBUG in models.src.preprocessing_pipeline: Size before cleaning: (4931, 13)
+[2025-05-19 17:47:03] DEBUG in models.src.preprocessing_pipeline: Size after cleaning: (4858, 24)
+[2025-05-19 17:47:03] DEBUG in models.src.preprocessing_pipeline: Added columns: ['log_trip_duration', 'day_of_week', 'hour', 'month', 'log_haversine', 'is_jamm', 'if_free', 'start_at_airport1', 'start_at_airport2', 'end_at_airport1', 'end_at_airport2', 'is_airport']
+[2025-05-19 17:47:03] DEBUG in models.src.preprocessing_pipeline: Removed columns: ['trip_duration']
+[2025-05-19 17:47:03] DEBUG in controllers.train_controller: FeatureEngineer.fit_transform completed in 0.4532 seconds with 4858 output rows
+[2025-05-19 17:47:03] DEBUG in controllers.train_controller: Prepared features X with shape (4858, 23) and target y with length 4858
+[2025-05-19 17:47:03] DEBUG in controllers.train_controller: Created TaxiModel instance with model_type=LR
+[2025-05-19 17:47:03] DEBUG in models.src.model_trainer: Hyperparams search...
+[2025-05-19 17:47:03] DEBUG in controllers.train_controller: Model training completed in 0.0163 seconds
+[2025-05-19 17:47:03] DEBUG in controllers.train_controller: Memory usage: Current = 23.43 MB, Peak = 25.87 MB
+[2025-05-19 17:47:03] INFO in controllers.train_controller: [train] Trained LR on 4931 rows → saved to models/model_storage/latest_model.pkl & models/model_storage/LR_model.pkl.
+[2025-05-19 17:47:12] DEBUG in __main__: Executing command: test
+[2025-05-19 17:47:12] DEBUG in controllers.test_controller: Starting test_model with model_name=latest, file_path=test.csv, metric=RMSE, source_type=csv
+[2025-05-19 17:47:12] DEBUG in controllers.test_controller: Resolved model path: models/model_storage/latest_model.pkl
+[2025-05-19 17:47:12] DEBUG in controllers.test_controller: Loading model...
+[2025-05-19 17:47:12] DEBUG in controllers.test_controller: Loading test data...
+[2025-05-19 17:47:12] DEBUG in controllers.test_controller: Loaded test data with 531 rows
+[2025-05-19 17:47:12] DEBUG in models.src.data_analyzer: All metrics calculated
+[2025-05-19 17:47:16] DEBUG in models.src.data_analyzer: Saved plot before cleaning to: views/plots_before_cleaning/image_20250519_174714.png
+[2025-05-19 17:47:16] DEBUG in models.src.data_analyzer: Data quality before cleaning:
+[2025-05-19 17:47:16] DEBUG in models.src.data_analyzer: 
+                column  NaNs  completeness  uniqueness
+0     dropoff_datetime     0           1.0      1.0000
+1     dropoff_latitude     0           1.0      0.9906
+2    dropoff_longitude     0           1.0      0.9642
+3                   id     0           1.0      1.0000
+4      passenger_count     0           1.0      0.0113
+5      pickup_datetime     0           1.0      1.0000
+6      pickup_latitude     0           1.0      0.9925
+7     pickup_longitude     0           1.0      0.9586
+8   store_and_fwd_flag     0           1.0      0.0038
+9        trip_duration     0           1.0      0.8456
+10           vendor_id     0           1.0      0.0038
+[2025-05-19 17:47:16] DEBUG in models.src.data_analyzer: Number of NaN values: 0
+[2025-05-19 17:47:16] DEBUG in models.src.data_analyzer: Data cleaned
+[2025-05-19 17:47:16] DEBUG in models.src.data_analyzer: Saved data quality report to: views/data_quality_report.json
+[2025-05-19 17:47:19] DEBUG in models.src.data_analyzer: Saved plot after cleaning to: views/plots_after_cleaning/image_20250519_174717.png
+[2025-05-19 17:47:19] DEBUG in models.src.data_analyzer: Cleaning summary:
+[2025-05-19 17:47:19] DEBUG in models.src.data_analyzer: Original shape: (531, 11)
+[2025-05-19 17:47:19] DEBUG in models.src.data_analyzer: Cleaned shape: (522, 13)
+[2025-05-19 17:47:19] DEBUG in controllers.test_controller: DataAnalyzer.fit_transform completed in 6.9064 seconds with 522 output rows
+[2025-05-19 17:47:19] DEBUG in models.src.preprocessing_pipeline: Feature engineering completed
+[2025-05-19 17:47:19] DEBUG in models.src.preprocessing_pipeline: Data cleaning completed
+[2025-05-19 17:47:19] DEBUG in models.src.preprocessing_pipeline: Size before cleaning: (522, 13)
+[2025-05-19 17:47:19] DEBUG in models.src.preprocessing_pipeline: Size after cleaning: (513, 24)
+[2025-05-19 17:47:19] DEBUG in models.src.preprocessing_pipeline: Added columns: ['log_trip_duration', 'day_of_week', 'hour', 'month', 'log_haversine', 'is_jamm', 'if_free', 'start_at_airport1', 'start_at_airport2', 'end_at_airport1', 'end_at_airport2', 'is_airport']
+[2025-05-19 17:47:19] DEBUG in models.src.preprocessing_pipeline: Removed columns: ['trip_duration']
+[2025-05-19 17:47:19] DEBUG in controllers.test_controller: FeatureEngineer.fit_transform completed in 0.0677 seconds with 513 output rows
+[2025-05-19 17:47:19] DEBUG in controllers.test_controller: Prepared features X with shape (513, 23) and target y with length 513
+[2025-05-19 17:47:19] DEBUG in controllers.test_controller: Model prediction completed in 0.0062 seconds
+[2025-05-19 17:47:19] DEBUG in controllers.test_controller: Memory usage: Current = 21.18 MB, Peak = 21.35 MB
+[2025-05-19 17:47:19] INFO in controllers.test_controller: [test] RMSE: 0.62 seconds on 513 samples.
