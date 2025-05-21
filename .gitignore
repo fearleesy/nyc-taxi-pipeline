@@ -1,3 +1,5 @@
 /models/
 stats/data_batch_log.jsonl
 stats/pipeline.log
+test.csv
+work.db
