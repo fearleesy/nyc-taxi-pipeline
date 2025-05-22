@@ -48,10 +48,10 @@ jobs:
           uses: actions/upload-artifact@v4
           with:
             name: RF_model
-            path: models/model_storage/RF_model.pth
+            path: models/model_storage/RF_model.pkl
           
         - name: Upload logs
           uses: actions/upload-artifact@v4
           with:
-            name: training-logs
-            path: training.log
+            name: pipeline-logs
+            path: ./stats/pipeline.log
