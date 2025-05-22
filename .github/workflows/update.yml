@@ -25,17 +25,28 @@ jobs:
           with:
             name: RF_model
             path: models/model_storage/
+          continue-on-error: true
+        - name: Check model existence
+          id: check-model
+          run: |
+            if [ -f "models/model.pkl" ]; then
+              echo "MODEL_EXISTS=1" >> $GITHUB_OUTPUT
+              echo "Model found. Retraining..."
+            else
+              echo "MODEL_EXISTS=0" >> $GITHUB_OUTPUT
+              echo "No model found. Training from scratch."
+            fi
       
         - name: Run Update
           env:
             PYTHONPATH: ${{ github.workspace }}
           run: |
-            python main.py train --model RF -w 1 --db work.db -s 100 -e 200
+            python main.py train --model RF -w  ${{ steps.check-model.outputs.MODEL_EXISTS }} --db work.db -s 100 -e 200
         - name: Upload new model
           uses: actions/upload-artifact@v3
           with:
             name: RF_model
-            path: models/model_storage//RF_model.pth
+            path: models/model_storage/RF_model.pth
           
         - name: Upload logs
           uses: actions/upload-artifact@v4
