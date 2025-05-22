@@ -21,11 +21,13 @@ jobs:
             pip install -r requirements.txt
 
         - name: Download previous model
+          id: download-model
           uses: actions/download-artifact@v3
           with:
             name: RF_model
             path: models/model_storage/
           continue-on-error: true
+          
         - name: Check model existence
           id: check-model
           run: |
