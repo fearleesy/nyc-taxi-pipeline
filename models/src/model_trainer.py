@@ -130,7 +130,8 @@ class TaxiModel:
             try:
                 old_model = joblib.load(f"./models/model_storage/{name}")
                 # old_n_estimators = old_model.n_estimators
-                old_n_estimators = old_model.named_steps['model'].n_estimators
+                # old_n_estimators = old_model.named_steps['model__n_estimators'].n_estimators
+                old_n_estimators = old_model.best_estimator_.named_steps['model'].n_estimators
                 print(f"Текущая модель загружена. n_estimators = {old_n_estimators}")
             except FileNotFoundError:
                 raise Exception("Файл модели не найден!")
