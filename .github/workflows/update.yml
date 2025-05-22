@@ -24,7 +24,7 @@ jobs:
           uses: actions/download-artifact@v3
           with:
             name: RF_model
-            path: models/
+            path: models/model_storage/
       
         - name: Run Update
           env:
@@ -35,7 +35,7 @@ jobs:
           uses: actions/upload-artifact@v3
           with:
             name: RF_model
-            path: models/RF_model.pth
+            path: models/model_storage//RF_model.pth
           
         - name: Upload logs
           uses: actions/upload-artifact@v4
