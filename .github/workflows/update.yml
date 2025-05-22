@@ -45,7 +45,7 @@ jobs:
           run: |
             python main.py train --model RF -w  ${{ steps.check-model.outputs.MODEL_EXISTS }} --db work.db -s 100 -e 200
         - name: Upload new model
-          uses: actions/upload-artifact@v3
+          uses: actions/upload-artifact@v4
           with:
             name: RF_model
             path: models/model_storage/RF_model.pth
