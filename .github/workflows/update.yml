@@ -31,7 +31,7 @@ jobs:
         - name: Check model existence
           id: check-model
           run: |
-            if [ -f "models/model.pkl" ]; then
+            if [ -f "models/model_storage/RF_model.pkl" ]; then
               echo "MODEL_EXISTS=1" >> $GITHUB_OUTPUT
               echo "Model found. Retraining..."
             else
