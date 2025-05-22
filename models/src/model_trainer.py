@@ -127,7 +127,7 @@ class TaxiModel:
                     name = i
                     break
             try:
-                old_model = joblib.load(f"./models/{name}")
+                old_model = joblib.load(f"./models/model_storage/{name}")
                 # old_n_estimators = old_model.n_estimators
                 old_n_estimators = old_model.named_steps['model'].n_estimators
                 print(f"Текущая модель загружена. n_estimators = {old_n_estimators}")
