@@ -118,14 +118,15 @@ class TaxiModel:
 
     
     def train(self, model_name: str, X_train : pd.DataFrame, y_train : pd.Series, is_warm_start: bool):
-        if is_warm_start and model_name == "RF" and os.path.exists('./models/'):
-            list_dist = os.listdir('./models/')
-            list_dist = sorted(list_dist)
-            name = None
-            for i in list_dist:
-                if i[:2] == "RF":
-                    name = i
-                    break
+        if is_warm_start and model_name == "RF" and os.path.exists('./models/model_storage'):
+            # list_dist = os.listdir('./models/model_storage')
+            # list_dist = sorted(list_dist)
+            # name = None
+            # for i in list_dist:
+            #     if i[:2] == "RF":
+            #         name = i
+            #         break
+            name = "RF_model.pkl"
             try:
                 old_model = joblib.load(f"./models/model_storage/{name}")
                 # old_n_estimators = old_model.n_estimators
